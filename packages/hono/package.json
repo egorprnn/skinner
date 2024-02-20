@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "name": "@skinner/hono",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "peerDependencies": {
+    "@hono/zod-validator": "^0.1.11",
+    "hono": "^4.0.2",
+    "zod": "^3.22.4"
+  }
+}
