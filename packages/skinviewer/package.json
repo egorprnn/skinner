@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "name": "@skinner/skinviewer",
+  "version": "1.0.0",
+  "scripts": {
+    "start:storybook": "storybook dev -p 6006",
+    "build:storybook": "storybook build"
+  },
+  "dependencies": {
+    "skinview3d": "^3.0.1"
+  }
+}
