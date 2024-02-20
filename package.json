@@ -1,4 +1,32 @@
 {
-  "name": "skinner",
-  "packageManager": "yarn@4.1.0"
+  "private": true,
+  "scripts": {
+    "lint:fix": "yarn eslint:fix && yarn prettier:fix",
+    "lint:check": "yarn eslint:check && yarn prettier:check",
+    "eslint:fix": "yarn eslint:check --fix",
+    "eslint:check": "yarn run eslint './packages/**/*.{ts,tsx}'",
+    "prettier:fix": "yarn run prettier --write './packages/**/*.{ts,tsx}'",
+    "prettier:check": "yarn run prettier --check './packages/**/*.{ts,tsx}'"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.0.1",
+    "@typescript-eslint/parser": "^7.0.1",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react": "^7.33.2",
+    "prettier": "^3.2.5",
+    "typescript": "^5.3.3"
+  },
+  "overrides": {
+    "vite": "^5.1.3"
+  },
+  "workspaces": [
+    "packages/frontend",
+    "packages/backend",
+    "packages/ui",
+    "packages/minecraft-auth",
+    "packages/hono",
+    "packages/constants",
+    "packages/ui",
+    "packages/skinviewer"
+  ]
 }
