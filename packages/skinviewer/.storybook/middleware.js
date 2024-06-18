@@ -1,3 +1,3 @@
-import { makeMiddleware } from '@skinner/ui/.storybook/middleware';
+import { makeMiddleware } from '@skinner/storybook/.storybook/middleware';
 
 export default makeMiddleware;

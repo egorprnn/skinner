@@ -1,1 +1,1 @@
-import '@skinner/ui/.storybook/manager';
+import '@skinner/storybook/.storybook/manager';

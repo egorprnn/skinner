@@ -6,7 +6,7 @@ import {
   RunningAnimation,
   type SkinViewerOptions,
 } from 'skinview3d';
-import { useEffect, useRef, type HTMLAttributes } from 'react';
+import { useEffect, useRef, type HTMLAttributes, type Ref } from 'react';
 
 export const enum Animation {
   IDLE = 'idle',
@@ -23,6 +23,7 @@ const animationTemplates = {
 } as const;
 
 export interface SkinViewerProps extends HTMLAttributes<HTMLDivElement> {
+  getRootRef?: Ref<HTMLDivElement>;
   /**
    * Render element height
    */
@@ -70,6 +71,7 @@ export interface SkinViewerProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 export function SkinViewer({
+  getRootRef,
   skin,
   slim,
   cape,
@@ -82,7 +84,7 @@ export function SkinViewer({
   animationSpeed = 0.5,
   paused,
   style,
-  ...rest
+  ...restProps
 }: SkinViewerProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const viewerRef = useRef<SkinViewerBase>();
@@ -169,12 +171,13 @@ export function SkinViewer({
 
   return (
     <div
+      ref={getRootRef}
       style={{
         width,
         height,
         ...style,
       }}
-      {...rest}
+      {...restProps}
     >
       <canvas ref={canvasRef} />
     </div>

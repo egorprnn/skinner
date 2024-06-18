@@ -1,3 +1,3 @@
-import preview from '@skinner/ui/.storybook/preview';
+import preview from '@skinner/storybook/.storybook/preview';
 
 export default preview;

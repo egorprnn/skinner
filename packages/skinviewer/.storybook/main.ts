@@ -1,3 +1,3 @@
-import config from '@skinner/ui/.storybook/main';
+import main from '@skinner/storybook/.storybook/main';
 
-export default config;
+export default main;

@@ -2,11 +2,12 @@
   "private": true,
   "name": "@skinner/skinviewer",
   "version": "1.0.0",
+  "main": "./src/index.ts",
   "scripts": {
-    "start:storybook": "storybook dev -p 6006",
-    "build:storybook": "storybook build"
+    "start:storybook": "storybook dev -p 6006"
   },
   "dependencies": {
-    "skinview3d": "^3.0.1"
+    "skinview3d": "^3.0.1",
+    "threads-es": "^1.0.0"
   }
 }
