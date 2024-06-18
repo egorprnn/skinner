@@ -1,0 +1,4 @@
+.skinViewer {
+  overflow: hidden;
+  border-radius: var(--vkui--size_border_radius_paper--regular);
+}

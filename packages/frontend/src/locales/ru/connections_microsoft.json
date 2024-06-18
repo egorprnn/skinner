@@ -1,0 +1,6 @@
+{
+  "connections_microsoft.error_title": "Упс-и...",
+  "connections_microsoft.error_unknown": "Произошла ошибка входа, попробуй снова",
+  "connections_microsoft.error_internal": "Произошла ошибка входа, попробуй снова",
+  "connections_microsoft.error_invalid_code": "Недействительная сессия Microsoft, попробуй снова"
+}

@@ -1,0 +1,29 @@
+{
+  "private": true,
+  "type": "module",
+  "main": "./app/root.tsx",
+  "scripts": {
+    "dev": "vite --host --port 3000",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@azure/msal-browser": "^3.17.0",
+    "@react-hookz/web": "^24.0.4",
+    "@tanstack/react-router": "^1.36.3",
+    "@tanstack/router-vite-plugin": "^1.38.0",
+    "framer-motion": "^11.2.10",
+    "i18next": "^23.11.5",
+    "i18next-browser-languagedetector": "^7.2.1",
+    "i18next-resources-to-backend": "^1.2.1",
+    "million": "^3.1.11",
+    "mobx": "^6.12.4",
+    "mobx-react-lite": "^4.0.7",
+    "react-i18next": "^14.1.2",
+    "react-use": "^17.5.0",
+    "react-use-measure": "^2.1.1"
+  },
+  "engines": {
+    "node": ">=20.0.0 <21.0.0"
+  },
+  "sideEffects": false
+}
