@@ -3,13 +3,5 @@
   "name": "@skinner/minecraft-auth",
   "version": "1.0.0",
   "description": "Minecraft auth module",
-  "main": "./src/index.ts",
-  "author": {
-    "name": "Egor Pronin",
-    "email": "mrzillagold@gmail.com"
-  },
-  "license": "UNLICENSED",
-  "dependencies": {
-    "axios": "^1.6.7"
-  }
+  "main": "./src/index.ts"
 }

@@ -1,0 +1,117 @@
+import { Exclude, Expose, instanceToPlain } from 'class-transformer';
+import { MinecraftAuth, MinecraftTextureState } from '@skinner/minecraft-auth';
+import { Column, Entity, JoinTable, ManyToMany, PrimaryColumn } from 'typeorm';
+
+import { MinecraftSkin } from './minecraftSkin';
+import { MinecraftCape } from './minecraftCape';
+
+@Entity()
+export class User {
+  /**
+   * Microsoft ID
+   */
+  @PrimaryColumn()
+  declare microsoft_id: string;
+
+  /**
+   * Minecraft UUID
+   */
+  @Column()
+  declare uuid: string | null;
+
+  /**
+   * Minecraft name
+   */
+  @Column({
+    length: 16,
+  })
+  declare name: string | null;
+
+  /**
+   * Minecraft access token
+   */
+  @Column({ select: false })
+  @Exclude()
+  declare minecraft_access_token: string | null;
+
+  /**
+   * Minecraft active skin id
+   */
+  @Column()
+  declare minecraft_active_skin_id: string | null;
+  @Expose()
+  get minecraft_active_skin() {
+    if (!this.minecraft_active_skin_id || !this.minecraft_skins) {
+      return;
+    }
+
+    return this.minecraft_skins.find(({ id }) => id === this.minecraft_active_skin_id);
+  }
+
+  /**
+   * Minecraft skins
+   */
+  @ManyToMany(() => MinecraftSkin, (minecraftSkin) => minecraftSkin.users)
+  @JoinTable()
+  declare minecraft_skins: MinecraftSkin[];
+
+  /**
+   * Minecraft capes
+   */
+  @ManyToMany(() => MinecraftCape, (minecraftCape) => minecraftCape.users)
+  @JoinTable()
+  declare minecraft_capes: MinecraftCape[];
+
+  /**
+   * Sync Minecraft profile data
+   */
+  async syncMinecraftProfile() {
+    if (!this.minecraft_access_token) {
+      return;
+    }
+
+    const minecraftAuth = new MinecraftAuth();
+
+    const minecraftProfile = await minecraftAuth.getMinecraftProfile(this.minecraft_access_token).catch(() => null);
+
+    if (minecraftProfile) {
+      const { id, name, skins, capes } = minecraftProfile;
+
+      this.uuid = id;
+      this.name = name;
+      this.minecraft_skins = skins.map(({ id, state, variant, textureKey }) => {
+        const skin = new MinecraftSkin();
+
+        skin.id = id;
+        skin.variant = variant;
+        skin.texture_key = textureKey;
+
+        if (state === MinecraftTextureState.ACTIVE) {
+          this.minecraft_active_skin_id = id;
+        }
+
+        return skin;
+      });
+      this.minecraft_capes = capes.map(({ id, url, alias }) => {
+        const cape = new MinecraftCape();
+
+        cape.id = id;
+        cape.alias = alias;
+        cape.texture_key = url.split('/').pop() as string;
+
+        return cape;
+      });
+
+      await Promise.all([
+        // @ts-expect-error
+        minecraftSkinRepository.save(this.minecraft_skins),
+        // @ts-expect-error
+        minecraftCapeRepository.save(this.minecraft_capes),
+      ]);
+    }
+  }
+
+  toJSON() {
+    return instanceToPlain(this);
+  }
+}

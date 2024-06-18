@@ -50,7 +50,6 @@
     ]
   },
   "rules": {
-    "indent": ["error", 2],
     "semi": ["error", "always"],
     "array-callback-return": ["error", {
       "allowImplicit": true
@@ -105,7 +104,6 @@
     "no-this-before-super": ["error"],
     "no-useless-constructor": ["error"],
     "no-var": ["error"],
-    "prefer-promise-reject-errors": ["error"],
     "object-shorthand": ["error"],
     "prefer-arrow-callback": ["error"],
     "prefer-const": ["error", {
@@ -115,6 +113,7 @@
     "rest-spread-spacing": ["error", "never"],
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/ban-ts-comment": "off",
+    "no-async-promise-executor": "off",
     "react/react-in-jsx-scope": "off",
     "@typescript-eslint/no-empty-interface": "off",
     "linebreak-style": "off",

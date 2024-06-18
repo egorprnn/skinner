@@ -1,0 +1,6 @@
+{
+  "private": true,
+  "name": "@skinner/storybook",
+  "version": "1.0.0",
+  "description": "Конфигурация и утилиты для Storybook"
+}

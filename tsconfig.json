@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
+    "plugins": [{ "name": "typescript-plugin-css-modules" }],
+
     // enable latest features
-    "lib": ["ESNext"],
+    "lib": ["ESNext", "dom"],
     "target": "ESNext",
     "module": "ESNext",
     "moduleDetection": "force",
