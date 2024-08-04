@@ -7,8 +7,6 @@ import { createLazyFileRoute, Outlet } from '@tanstack/react-router';
 
 import { Panel } from './~__root/components';
 
-import { Sections } from './~_constructor/components';
-
 import { useSession } from '../services';
 
 import styles from './~_constructor/index.module.css';
@@ -43,4 +41,5 @@ Constructor.displayName = 'Constructor';
 
 export const Route = createLazyFileRoute('/_constructor')({
   component: Constructor,
+  notFoundComponent: () => <>test</>,
 });

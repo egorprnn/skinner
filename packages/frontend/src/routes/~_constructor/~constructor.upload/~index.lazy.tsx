@@ -198,7 +198,7 @@ export const ConstructorUploadItem = () => {
   );
 };
 
-export const Route = createLazyFileRoute('/_constructor/constructor/upload_item/')({
+export const Route = createLazyFileRoute('/_constructor/constructor/upload/')({
   component: () => (
     <ConstructorUploadItemViewModelProvider>
       <ConstructorUploadItem />

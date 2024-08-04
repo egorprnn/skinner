@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/~__root'
+import { Route as Import } from './routes/~*'
 
 // Create Virtual Routes
 
@@ -24,8 +25,8 @@ const ConstructorConstructorLazyImport = createFileRoute(
 const ConnectionsMicrosoftIndexLazyImport = createFileRoute(
   '/connections/microsoft/',
 )()
-const ConstructorConstructorUploaditemIndexLazyImport = createFileRoute(
-  '/_constructor/constructor/upload_item/',
+const ConstructorConstructorUploadIndexLazyImport = createFileRoute(
+  '/_constructor/constructor/upload/',
 )()
 
 // Create/Update Routes
@@ -34,6 +35,11 @@ const ConstructorLazyRoute = ConstructorLazyImport.update({
   id: '/_constructor',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/~_constructor.lazy').then((d) => d.Route))
+
+const Route = Import.update({
+  path: '/*',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
@@ -57,12 +63,12 @@ const ConnectionsMicrosoftIndexLazyRoute =
     import('./routes/~connections/~microsoft/~index.lazy').then((d) => d.Route),
   )
 
-const ConstructorConstructorUploaditemIndexLazyRoute =
-  ConstructorConstructorUploaditemIndexLazyImport.update({
-    path: '/upload_item/',
+const ConstructorConstructorUploadIndexLazyRoute =
+  ConstructorConstructorUploadIndexLazyImport.update({
+    path: '/upload/',
     getParentRoute: () => ConstructorConstructorLazyRoute,
   } as any).lazy(() =>
-    import('./routes/~_constructor/~constructor.upload_item/~index.lazy').then(
+    import('./routes/~_constructor/~constructor.upload/~index.lazy').then(
       (d) => d.Route,
     ),
   )
@@ -76,6 +82,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/*': {
+      id: '/*'
+      path: '/*'
+      fullPath: '/*'
+      preLoaderRoute: typeof Import
       parentRoute: typeof rootRoute
     }
     '/_constructor': {
@@ -99,11 +112,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConnectionsMicrosoftIndexLazyImport
       parentRoute: typeof rootRoute
     }
-    '/_constructor/constructor/upload_item/': {
-      id: '/_constructor/constructor/upload_item/'
-      path: '/upload_item'
-      fullPath: '/constructor/upload_item'
-      preLoaderRoute: typeof ConstructorConstructorUploaditemIndexLazyImport
+    '/_constructor/constructor/upload/': {
+      id: '/_constructor/constructor/upload/'
+      path: '/upload'
+      fullPath: '/constructor/upload'
+      preLoaderRoute: typeof ConstructorConstructorUploadIndexLazyImport
       parentRoute: typeof ConstructorConstructorLazyImport
     }
   }
@@ -113,10 +126,11 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
+  Route,
   ConstructorLazyRoute: ConstructorLazyRoute.addChildren({
     ConstructorConstructorLazyRoute:
       ConstructorConstructorLazyRoute.addChildren({
-        ConstructorConstructorUploaditemIndexLazyRoute,
+        ConstructorConstructorUploadIndexLazyRoute,
       }),
   }),
   ConnectionsMicrosoftIndexLazyRoute,
@@ -130,12 +144,16 @@ export const routeTree = rootRoute.addChildren({
     "__root__": {
       "children": [
         "/",
+        "/*",
         "/_constructor",
         "/connections/microsoft/"
       ]
     },
     "/": {
       "filePath": "~index.lazy.tsx"
+    },
+    "/*": {
+      "filePath": "~*.tsx"
     },
     "/_constructor": {
       "filePath": "~_constructor.lazy.tsx",
@@ -147,14 +165,14 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "~_constructor/~constructor.lazy.tsx",
       "parent": "/_constructor",
       "children": [
-        "/_constructor/constructor/upload_item/"
+        "/_constructor/constructor/upload/"
       ]
     },
     "/connections/microsoft/": {
       "filePath": "~connections/~microsoft/~index.lazy.tsx"
     },
-    "/_constructor/constructor/upload_item/": {
-      "filePath": "~_constructor/~constructor.upload_item/~index.lazy.tsx",
+    "/_constructor/constructor/upload/": {
+      "filePath": "~_constructor/~constructor.upload/~index.lazy.tsx",
       "parent": "/_constructor/constructor"
     }
   }

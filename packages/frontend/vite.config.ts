@@ -6,7 +6,6 @@ import { defineConfig } from 'vite';
 import { imagetools } from 'vite-imagetools';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import { TanStackRouterVite } from '@tanstack/router-vite-plugin';
-import { optimizeCssModules } from 'vite-plugin-optimize-css-modules';
 
 export default defineConfig({
   base: '/',
@@ -56,7 +55,6 @@ export default defineConfig({
     TanStackRouterVite({
       routeFilePrefix: '~',
     }),
-    // optimizeCssModules(),
     imagetools(),
     viteStaticCopy({
       targets: [

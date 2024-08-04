@@ -6,6 +6,7 @@ export const router = createRouter({
   routeTree,
   trailingSlash: 'never',
   defaultPreload: 'intent',
+  defaultNotFoundComponent: () => null,
 });
 
 declare module '@tanstack/react-router' {
