@@ -9,7 +9,7 @@ import { TanStackRouterVite } from '@tanstack/router-vite-plugin';
 import { optimizeCssModules } from 'vite-plugin-optimize-css-modules';
 
 export default defineConfig({
-  base: './',
+  base: '/',
   build: {
     minify: true,
     rollupOptions: {
