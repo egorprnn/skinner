@@ -1,8 +1,6 @@
 {
   "rewrites": [
-    { "source": "/", "destination": "/index.html" },
-    { "source": "/constructor", "destination": "/index.html" },
-    { "source": "/constructor/upload_item", "destination": "/index.html" }
+    { "source": "/(.*)", "destination": "/index.html" }
   ],
   "trailingSlash": false
 }
