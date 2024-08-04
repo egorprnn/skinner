@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite';
 import { Image, SimpleCell } from '@vkontakte/vkui';
 import { MinecraftAvatar } from '@skinner/skinviewer';
 
-import { useSession } from '../../../../../store';
+import { useSession } from '../../../../../services';
 
 import styles from './PanelUser.module.css';
 

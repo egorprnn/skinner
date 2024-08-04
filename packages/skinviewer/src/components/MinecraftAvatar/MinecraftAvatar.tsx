@@ -38,7 +38,7 @@ export const MinecraftAvatar = ({
       {...restProps}
     >
       {title && <title>{title}</title>}
-      <use xlinkHref={`#${url}`} />
+      <use xlinkHref={`#${btoa(url)}`} />
     </svg>
   );
 };

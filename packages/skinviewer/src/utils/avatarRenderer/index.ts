@@ -11,7 +11,9 @@ export class AvatarRenderer {
   );
 
   static async render(url: string) {
-    if (this.#sprite.has(url)) {
+    const id = btoa(url);
+
+    if (this.#sprite.has(id)) {
       return;
     }
 
@@ -20,7 +22,7 @@ export class AvatarRenderer {
     symbol.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
     symbol.setAttribute('viewBox', '0 0 8 8');
     symbol.setAttribute('shape-rendering', 'crispEdges');
-    symbol.setAttribute('id', url);
+    symbol.setAttribute('id', id);
 
     this.#sprite.add(new BrowserSymbol(symbol));
 
@@ -29,7 +31,7 @@ export class AvatarRenderer {
     const rects = await worker.methods.getRects(url).catch(() => null);
 
     if (!rects) {
-      this.#sprite.delete(url);
+      this.#sprite.delete(id);
 
       return;
     }

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Group, Placeholder, Spinner } from '@vkontakte/vkui';
 import { createLazyFileRoute } from '@tanstack/react-router';
 
-import { useSession } from '../../../store';
+import { useSession } from '../../../services';
 
 import { Panel } from '../../~__root/components';
 
@@ -31,8 +31,8 @@ const ConnectionsMicrosoft = observer(() => {
         >
           {session.isLoginError && (
             <Group>
-              <Placeholder header={t('connections_microsoft.error_title')}>
-                {t(`connections_microsoft.error_${session.isLoginError}`) || t(`connections_microsoft.error_unknown`)}
+              <Placeholder header={t('connections_microsoft:error_title')}>
+                {t(`connections_microsoft:error_${session.isLoginError}`) || t(`connections_microsoft:error_unknown`)}
               </Placeholder>
             </Group>
           )}

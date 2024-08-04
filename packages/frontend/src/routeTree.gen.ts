@@ -16,24 +16,37 @@ import { Route as rootRoute } from './routes/~__root'
 
 // Create Virtual Routes
 
+const ConstructorLazyImport = createFileRoute('/_constructor')()
 const IndexLazyImport = createFileRoute('/')()
-const ConstructorIndexLazyImport = createFileRoute('/constructor/')()
+const ConstructorConstructorLazyImport = createFileRoute(
+  '/_constructor/constructor',
+)()
 const ConnectionsMicrosoftIndexLazyImport = createFileRoute(
   '/connections/microsoft/',
 )()
+const ConstructorConstructorUploaditemIndexLazyImport = createFileRoute(
+  '/_constructor/constructor/upload_item/',
+)()
 
 // Create/Update Routes
+
+const ConstructorLazyRoute = ConstructorLazyImport.update({
+  id: '/_constructor',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/~_constructor.lazy').then((d) => d.Route))
 
 const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/~index.lazy').then((d) => d.Route))
 
-const ConstructorIndexLazyRoute = ConstructorIndexLazyImport.update({
-  path: '/constructor/',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() =>
-  import('./routes/~constructor/~index.lazy').then((d) => d.Route),
+const ConstructorConstructorLazyRoute = ConstructorConstructorLazyImport.update(
+  {
+    path: '/constructor',
+    getParentRoute: () => ConstructorLazyRoute,
+  } as any,
+).lazy(() =>
+  import('./routes/~_constructor/~constructor.lazy').then((d) => d.Route),
 )
 
 const ConnectionsMicrosoftIndexLazyRoute =
@@ -42,6 +55,16 @@ const ConnectionsMicrosoftIndexLazyRoute =
     getParentRoute: () => rootRoute,
   } as any).lazy(() =>
     import('./routes/~connections/~microsoft/~index.lazy').then((d) => d.Route),
+  )
+
+const ConstructorConstructorUploaditemIndexLazyRoute =
+  ConstructorConstructorUploaditemIndexLazyImport.update({
+    path: '/upload_item/',
+    getParentRoute: () => ConstructorConstructorLazyRoute,
+  } as any).lazy(() =>
+    import('./routes/~_constructor/~constructor.upload_item/~index.lazy').then(
+      (d) => d.Route,
+    ),
   )
 
 // Populate the FileRoutesByPath interface
@@ -55,12 +78,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
-    '/constructor/': {
-      id: '/constructor/'
+    '/_constructor': {
+      id: '/_constructor'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof ConstructorLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/_constructor/constructor': {
+      id: '/_constructor/constructor'
       path: '/constructor'
       fullPath: '/constructor'
-      preLoaderRoute: typeof ConstructorIndexLazyImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof ConstructorConstructorLazyImport
+      parentRoute: typeof ConstructorLazyImport
     }
     '/connections/microsoft/': {
       id: '/connections/microsoft/'
@@ -69,6 +99,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConnectionsMicrosoftIndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/_constructor/constructor/upload_item/': {
+      id: '/_constructor/constructor/upload_item/'
+      path: '/upload_item'
+      fullPath: '/constructor/upload_item'
+      preLoaderRoute: typeof ConstructorConstructorUploaditemIndexLazyImport
+      parentRoute: typeof ConstructorConstructorLazyImport
+    }
   }
 }
 
@@ -76,7 +113,12 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
-  ConstructorIndexLazyRoute,
+  ConstructorLazyRoute: ConstructorLazyRoute.addChildren({
+    ConstructorConstructorLazyRoute:
+      ConstructorConstructorLazyRoute.addChildren({
+        ConstructorConstructorUploaditemIndexLazyRoute,
+      }),
+  }),
   ConnectionsMicrosoftIndexLazyRoute,
 })
 
@@ -88,18 +130,32 @@ export const routeTree = rootRoute.addChildren({
     "__root__": {
       "children": [
         "/",
-        "/constructor/",
+        "/_constructor",
         "/connections/microsoft/"
       ]
     },
     "/": {
       "filePath": "~index.lazy.tsx"
     },
-    "/constructor/": {
-      "filePath": "~constructor/~index.lazy.tsx"
+    "/_constructor": {
+      "filePath": "~_constructor.lazy.tsx",
+      "children": [
+        "/_constructor/constructor"
+      ]
+    },
+    "/_constructor/constructor": {
+      "filePath": "~_constructor/~constructor.lazy.tsx",
+      "parent": "/_constructor",
+      "children": [
+        "/_constructor/constructor/upload_item/"
+      ]
     },
     "/connections/microsoft/": {
       "filePath": "~connections/~microsoft/~index.lazy.tsx"
+    },
+    "/_constructor/constructor/upload_item/": {
+      "filePath": "~_constructor/~constructor.upload_item/~index.lazy.tsx",
+      "parent": "/_constructor/constructor"
     }
   }
 }

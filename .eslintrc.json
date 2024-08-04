@@ -71,7 +71,6 @@
     "comma-style": ["error", "last"],
     "computed-property-spacing": ["error", "never"],
     "function-call-argument-newline": ["error", "consistent"],
-    "function-paren-newline": ["error", "consistent"],
     "new-parens": ["error", "always"],
     "newline-per-chained-call": ["error"],
     "no-multiple-empty-lines": ["error", {

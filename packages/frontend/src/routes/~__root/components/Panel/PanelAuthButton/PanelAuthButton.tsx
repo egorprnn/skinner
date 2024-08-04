@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 
 import { AuthButton } from '../../../../../components';
 
-import { useSession } from '../../../../../store';
+import { useSession } from '../../../../../services';
 
 export const PanelAuthButton = observer(() => {
   const { authed } = useSession();

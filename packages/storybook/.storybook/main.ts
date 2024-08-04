@@ -33,7 +33,7 @@ const config: StorybookConfig = {
       typescript: {
         configFile: path.resolve('../', '../', 'tsconfig.json'),
         configOverwrite: {
-          include: [path.resolve(process.cwd(), 'src', '**', '*')],
+          include: [path.resolve(process.cwd(), 'src', '**', '*'), path.resolve(process.cwd(), 'types', '**', '*')],
         },
       },
     },

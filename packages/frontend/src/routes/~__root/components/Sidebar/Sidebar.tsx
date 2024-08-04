@@ -1,3 +1,4 @@
+import { classNames } from '@vkontakte/vkjs';
 import {
   Button,
   Cell,
@@ -8,6 +9,7 @@ import {
   SplitCol,
   useAdaptivityConditionalRender,
 } from '@vkontakte/vkui';
+import styles from './Sidebar.module.css';
 
 export const Sidebar = () => {
   const { viewWidth } = useAdaptivityConditionalRender();
@@ -17,7 +19,14 @@ export const Sidebar = () => {
   }
 
   return (
-    <SplitCol className={viewWidth.tabletPlus.className} minWidth={280} width={280} maxWidth={280} autoSpaced fixed>
+    <SplitCol
+      className={classNames(viewWidth.tabletPlus.className, styles.root)}
+      minWidth={280}
+      width={280}
+      maxWidth={280}
+      autoSpaced
+      fixed
+    >
       <Panel>
         <PanelHeader
           before={

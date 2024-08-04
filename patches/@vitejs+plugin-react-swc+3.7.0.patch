@@ -1,0 +1,28 @@
+diff --git a/node_modules/@vitejs/plugin-react-swc/index.cjs b/node_modules/@vitejs/plugin-react-swc/index.cjs
+index 27afb3a..c642a39 100644
+--- a/node_modules/@vitejs/plugin-react-swc/index.cjs
++++ b/node_modules/@vitejs/plugin-react-swc/index.cjs
+@@ -171,7 +171,9 @@ var transformWithOptions = async (id, code, target, options, reactConfig) => {
+         experimental: { plugins: options.plugins },
+         transform: {
+           useDefineForClassFields: true,
+-          react: reactConfig
++          legacyDecorator: true,
++          decoratorMetadata: true,
++          react: reactConfig,
+         }
+       }
+     });
+diff --git a/node_modules/@vitejs/plugin-react-swc/index.mjs b/node_modules/@vitejs/plugin-react-swc/index.mjs
+index 41e1f9f..6c0e218 100644
+--- a/node_modules/@vitejs/plugin-react-swc/index.mjs
++++ b/node_modules/@vitejs/plugin-react-swc/index.mjs
+@@ -172,6 +172,8 @@ var transformWithOptions = async (id, code, target, options, reactConfig) => {
+         experimental: { plugins: options.plugins },
+         transform: {
+           useDefineForClassFields: true,
++          legacyDecorator: true,
++          decoratorMetadata: true,
+           react: reactConfig
+         }
+       }

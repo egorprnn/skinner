@@ -1,0 +1,18 @@
+{
+  "name": "@skinner/di",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "sideEffects": true,
+  "peerDependencies": {
+    "@types/react": "^18.2.54",
+    "@types/react-dom": "^18.2.18",
+    "mobx": "^6.12.0",
+    "mobx-react-lite": "^4.0.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.2.2",
+    "tsyringe": "^4.8.0"
+  }
+}

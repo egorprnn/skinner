@@ -7,3 +7,4 @@ export const entities = [User, MinecraftSkin, MinecraftCape];
 export * from './user';
 export * from './minecraftSkin';
 export * from './minecraftCape';
+export * from './constructorItem';

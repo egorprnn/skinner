@@ -6,15 +6,20 @@
     "eslint:fix": "yarn eslint:check --fix",
     "eslint:check": "yarn run eslint './packages/**/*.{ts,tsx}'",
     "prettier:fix": "yarn run prettier --write './packages/**/*.{ts,tsx,css}'",
-    "prettier:check": "yarn run prettier --check './packages/**/*.{ts,tsx,css}'"
+    "prettier:check": "yarn run prettier --check './packages/**/*.{ts,tsx,css}'",
+    "postinstall": "patch-package"
   },
   "dependencies": {
-    "@vkontakte/icons": "^2.121.0",
+    "@vkontakte/icons": "^2.128.0",
     "@vkontakte/vkjs": "^0.32.4",
-    "@vkontakte/vkui": "^6.1.1",
-    "@vkontakte/vkui-tokens": "^4.47.0",
+    "@vkontakte/vkui": "^6.4.1",
+    "@vkontakte/vkui-tokens": "^4.49.0",
     "axios": "^1.6.7",
     "hono": "^4.4.6",
+    "i18next": "^23.11.5",
+    "i18next-browser-languagedetector": "^7.2.1",
+    "i18next-resources-to-backend": "^1.2.1",
+    "million": "^3.1.11",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "zod": "^3.23.8"
@@ -35,10 +40,11 @@
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^7.13.0",
     "@typescript-eslint/parser": "^7.13.0",
-    "@vitejs/plugin-react": "^4.3.1",
+    "@vitejs/plugin-react-swc": "^3.7.0",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.2",
     "prettier": "^3.3.2",
+    "patch-package": "^8.0.0",
     "storybook": "^8.1.10",
     "swc-loader": "^0.2.6",
     "typescript": "^5.4.5",
@@ -58,6 +64,9 @@
     "packages/ui",
     "packages/skinviewer",
     "packages/browser-store",
-    "packages/storybook"
+    "packages/storybook",
+    "packages/di",
+    "packages/utils",
+    "packages/i18next"
   ]
 }

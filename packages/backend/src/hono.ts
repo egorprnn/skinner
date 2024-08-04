@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { sentry } from '@hono/sentry';
-import { SITE_URL } from '@skinner/constants';
+import { IS_DEVELOPMENT_MODE, SITE_URL } from '@skinner/constants';
 import { HTTPException } from '@skinner/hono';
 
 export const enum CommonErrorCode {
@@ -14,7 +14,9 @@ export const app = new Hono();
 
 app.use(
   '*',
-  sentry(),
+  sentry({
+    dsn: process.env['SENTRY_DSN'],
+  }),
   cors({
     origin: [SITE_URL],
   }),
@@ -25,7 +27,9 @@ app.onError(async (error, context) => {
     return error.getResponse();
   }
 
-  console.log(error);
+  if (IS_DEVELOPMENT_MODE) {
+    console.log(error);
+  }
 
   if (error.constructor.name === 'HTTPException') {
     throw new HTTPException(

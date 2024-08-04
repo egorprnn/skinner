@@ -102,6 +102,9 @@ const app = new Hono()
           where: {
             microsoft_id: localAccountId,
           },
+          relations: {
+            minecraft_active_skin: true,
+          },
         })) || new User();
 
       user.microsoft_id = localAccountId;
@@ -109,7 +112,9 @@ const app = new Hono()
 
       await user.syncMinecraftProfile();
 
-      await dataSource.manager.save(user);
+      await dataSource.manager.save(user, {
+        reload: true,
+      });
 
       const tokenCreatedAt = Math.floor(Date.now() / 1_000);
 

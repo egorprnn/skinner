@@ -1,0 +1,5 @@
+.root {
+  --vkui--size_base_padding_horizontal--regular: 0;
+
+  overflow: hidden;
+}

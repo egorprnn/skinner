@@ -2,6 +2,8 @@ import { DataSource } from 'typeorm';
 import { IS_DEVELOPMENT_MODE } from '@skinner/constants';
 
 import { entities } from './entities';
+import { migrations } from './migrations';
+import { subscribers } from './subscribers';
 
 export const dataSource = new DataSource({
   type: 'postgres',
@@ -13,4 +15,6 @@ export const dataSource = new DataSource({
   synchronize: true,
   logging: IS_DEVELOPMENT_MODE,
   entities,
+  migrations,
+  subscribers,
 });

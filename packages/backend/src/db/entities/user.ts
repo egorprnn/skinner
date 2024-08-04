@@ -1,6 +1,6 @@
-import { Exclude, Expose, instanceToPlain } from 'class-transformer';
+import { Exclude, instanceToPlain } from 'class-transformer';
 import { MinecraftAuth, MinecraftTextureState } from '@skinner/minecraft-auth';
-import { Column, Entity, JoinTable, ManyToMany, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryColumn } from 'typeorm';
 
 import { MinecraftSkin } from './minecraftSkin';
 import { MinecraftCape } from './minecraftCape';
@@ -17,7 +17,7 @@ export class User {
    * Minecraft UUID
    */
   @Column()
-  declare uuid: string | null;
+  declare uuid?: string;
 
   /**
    * Minecraft name
@@ -25,28 +25,27 @@ export class User {
   @Column({
     length: 16,
   })
-  declare name: string | null;
+  declare name?: string;
 
   /**
    * Minecraft access token
    */
   @Column({ select: false })
   @Exclude()
-  declare minecraft_access_token: string | null;
+  declare minecraft_access_token?: string;
 
   /**
    * Minecraft active skin id
    */
   @Column()
-  declare minecraft_active_skin_id: string | null;
-  @Expose()
-  get minecraft_active_skin() {
-    if (!this.minecraft_active_skin_id || !this.minecraft_skins) {
-      return;
-    }
+  declare minecraft_active_skin_id?: string;
 
-    return this.minecraft_skins.find(({ id }) => id === this.minecraft_active_skin_id);
-  }
+  /**
+   * Minecraft active skin
+   */
+  @ManyToOne(() => MinecraftSkin, (minecraftSkin) => minecraftSkin.users)
+  @JoinColumn({ name: 'minecraft_active_skin_id' })
+  declare minecraft_active_skin: MinecraftSkin;
 
   /**
    * Minecraft skins

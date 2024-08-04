@@ -1,11 +1,18 @@
-import { Panel as PanelBase, PanelHeader, type PanelProps as PanelBaseProps } from '@vkontakte/vkui';
+import {
+  Panel as PanelBase,
+  PanelHeader,
+  type PanelHeaderProps,
+  type PanelProps as PanelBaseProps,
+} from '@vkontakte/vkui';
 
 import { PanelUser } from './PanelUser';
 import { PanelAuthButton } from './PanelAuthButton';
 
-export type PanelProps = PanelBaseProps;
+export interface PanelProps extends PanelBaseProps {
+  header?: PanelHeaderProps['children'];
+}
 
-export const Panel = ({ children, ...props }: PanelProps) => (
+export const Panel = ({ header, children, ...props }: PanelProps) => (
   <PanelBase {...props}>
     <PanelHeader
       after={
@@ -14,7 +21,9 @@ export const Panel = ({ children, ...props }: PanelProps) => (
           <PanelAuthButton key="auth-button" />
         </>
       }
-    />
+    >
+      {header}
+    </PanelHeader>
     {children}
   </PanelBase>
 );

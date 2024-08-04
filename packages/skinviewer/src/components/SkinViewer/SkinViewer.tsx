@@ -6,7 +6,13 @@ import {
   RunningAnimation,
   type SkinViewerOptions,
 } from 'skinview3d';
+import { MinecraftTextureVariant } from '@skinner/minecraft-auth';
 import { useEffect, useRef, type HTMLAttributes, type Ref } from 'react';
+
+import { BedrockAnimation } from '../../utils';
+
+import skinStubAlex from '../../assets/skin_stub_alex.png?url';
+import skinStubSteve from '../../assets/skin_stub_steve.png?url';
 
 export const enum Animation {
   IDLE = 'idle',
@@ -35,11 +41,11 @@ export interface SkinViewerProps extends HTMLAttributes<HTMLDivElement> {
   /**
    * Skin source
    */
-  skin: SkinViewerOptions['skin'];
+  skin?: SkinViewerOptions['skin'] | File | Blob;
   /**
-   * Use slim skin model, auto-detect skin mode by default
+   * Skin model
    */
-  slim?: boolean;
+  model?: SkinViewerOptions['model'] | MinecraftTextureVariant | 'classic';
   /**
    * Cape source
    */
@@ -59,7 +65,7 @@ export interface SkinViewerProps extends HTMLAttributes<HTMLDivElement> {
   /**
    * Current animation name
    */
-  animation?: Animation;
+  animation?: Animation | BedrockAnimation;
   /**
    * Animation speed
    */
@@ -73,19 +79,29 @@ export interface SkinViewerProps extends HTMLAttributes<HTMLDivElement> {
 export function SkinViewer({
   getRootRef,
   skin,
-  slim,
   cape,
-  height,
+  model,
   width,
+  height,
+  enablePan,
   enableZoom,
   enableRotate,
-  enablePan,
   animation,
   animationSpeed = 0.5,
   paused,
   style,
   ...restProps
 }: SkinViewerProps) {
+  switch (model) {
+    case 'classic':
+    case MinecraftTextureVariant.CLASSIC:
+      model = 'default';
+      break;
+    case MinecraftTextureVariant.SLIM:
+      model = 'slim';
+      break;
+  }
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const viewerRef = useRef<SkinViewerBase>();
 
@@ -103,17 +119,29 @@ export function SkinViewer({
     };
   }, []);
 
-  useEffect(() => {
-    if (skin) {
-      viewerRef?.current?.loadSkin(skin, {
-        model: typeof slim !== 'undefined' ? (slim ? 'slim' : 'default') : 'auto-detect',
-      });
-
-      return;
+  const loadSkin = async () => {
+    if (!skin) {
+      switch (model) {
+        case 'slim':
+          skin = skinStubAlex;
+          break;
+        default:
+          skin = skinStubSteve;
+      }
     }
 
-    viewerRef?.current?.resetSkin();
-  }, [skin, slim]);
+    if (skin instanceof File || skin instanceof Blob) {
+      skin = await createImageBitmap(skin);
+    }
+
+    viewerRef?.current?.loadSkin(skin, {
+      model: model ?? 'auto-detect',
+    });
+  };
+
+  useEffect(() => {
+    loadSkin();
+  }, [skin, model]);
 
   useEffect(() => {
     if (cape) {
@@ -166,7 +194,11 @@ export function SkinViewer({
       return;
     }
 
-    viewer.animation = new animationTemplates[animation]();
+    if (typeof animation === 'string') {
+      viewer.animation = new animationTemplates[animation]();
+    } else {
+      viewer.animation = animation;
+    }
   }, [animation]);
 
   return (
@@ -183,3 +215,5 @@ export function SkinViewer({
     </div>
   );
 }
+
+export { skinStubAlex, skinStubSteve };
