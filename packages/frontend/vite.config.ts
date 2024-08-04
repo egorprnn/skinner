@@ -56,7 +56,7 @@ export default defineConfig({
     TanStackRouterVite({
       routeFilePrefix: '~',
     }),
-    optimizeCssModules(),
+    // optimizeCssModules(),
     imagetools(),
     viteStaticCopy({
       targets: [
