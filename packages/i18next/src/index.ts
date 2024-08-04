@@ -10,20 +10,21 @@ export const i18nextInitialization = i18next
     // @ts-expect-error
     i18nextResourcesToBackend((language, namespace) => {
       if (namespace.startsWith('shared.')) {
-        return import(/* @vite-ignore */ `../../i18next/locales/${language}/${namespace}.json`);
+        return import(/* @vite-ignore */ `../../i18next/locales/${language}/${namespace}.js`);
       }
 
       if (typeof window !== 'undefined') {
-        return import(/* @vite-ignore */ `../../i18next/locales/${language}/frontend/${namespace}.json`);
+        return import(/* @vite-ignore */ `../../i18next/locales/${language}/frontend/${namespace}.js`);
       }
 
-      return import(/* @vite-ignore */ `../../i18next/locales/${language}/backend/${namespace}.json`);
+      return import(/* @vite-ignore */ `../../i18next/locales/${language}/backend/${namespace}.js`);
     }),
   )
   .init({
     ns: ['common'],
     defaultNS: 'common',
     fallbackLng: 'en',
+    supportedLngs: ['en', 'ru'],
     debug: IS_DEVELOPMENT_MODE,
     interpolation: {
       escapeValue: false,

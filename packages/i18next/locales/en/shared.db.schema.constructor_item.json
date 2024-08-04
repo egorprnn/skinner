@@ -1,5 +1,0 @@
-{
-  "file_invalid_format": "Only .png format are supported.",
-  "file_invalid_size": "Maximum file size 1 MB.",
-  "file_invalid_dimensions": "Images with dimensions {{dimensions}} px on each side are allowed."
-}
