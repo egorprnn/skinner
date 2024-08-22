@@ -20,6 +20,7 @@ export default defineConfig({
         },
       },
     },
+    sourcemap: true,
   },
   esbuild: {
     target: 'chrome64',
