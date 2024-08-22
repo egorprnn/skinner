@@ -15,8 +15,8 @@ export default defineConfig(({ command }) => ({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          if (id.includes('react') || id.includes('@tanstack') || id.includes('react-dom')) {
-            return 'react';
+          if (id.includes('@swc') || id.includes('@babel') || id.includes('tslib')) {
+            return 'helpers';
           }
 
           if (id.includes('three') || id.includes('skinview3d') || id.includes('skinview-utils')) {
@@ -51,7 +51,7 @@ export default defineConfig(({ command }) => ({
     },
   },
   esbuild: {
-    target: 'chrome64',
+    target: 'chrome84',
     legalComments: 'none',
   },
   server: {
