@@ -2,25 +2,53 @@ import path from 'path';
 import svgr from 'vite-plugin-svgr';
 import million from 'million/compiler';
 import react from '@vitejs/plugin-react-swc';
+import typescript from '@rollup/plugin-typescript';
 import { defineConfig } from 'vite';
 import { imagetools } from 'vite-imagetools';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import { TanStackRouterVite } from '@tanstack/router-vite-plugin';
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   base: '/',
   build: {
     minify: true,
     rollupOptions: {
       output: {
         manualChunks: (id) => {
+          if (id.includes('react') || id.includes('@tanstack') || id.includes('react-dom')) {
+            return 'react';
+          }
+
+          if (id.includes('three') || id.includes('skinview3d') || id.includes('skinview-utils')) {
+            return '3d';
+          }
+
+          if (id.includes('@vkontakte') || id.includes('@floating-ui')) {
+            return 'vkontakte';
+          }
+
+          if (id.includes('i18next') || id.includes('i18next-browser-languagedetector')) {
+            return 'i18next';
+          }
+
+          if (id.includes('framer-motion')) {
+            return 'animations';
+          }
+
+          if (id.includes('mobx') || id.includes('mobx-react-lite')) {
+            return 'state-management';
+          }
+
+          if (id.includes('zod') || id.includes('tsyringe') || id.includes('reflect-metadata')) {
+            return 'validation-and-di';
+          }
+
           if (id.includes('node_modules')) {
             return `vendor-${getModuleNameFromPath(id)}`;
           }
         },
       },
     },
-    sourcemap: true,
   },
   esbuild: {
     target: 'chrome64',
@@ -50,8 +78,9 @@ export default defineConfig({
         noSlot: true,
       },
     }),
+    command === 'build' ? typescript() : undefined,
     react({
-      tsDecorators: true,
+      tsDecorators: command !== 'build',
     }),
     TanStackRouterVite({
       routeFilePrefix: '~',
@@ -66,7 +95,7 @@ export default defineConfig({
       ],
     }),
   ],
-});
+}));
 
 function getModuleNameFromPath(absolutePath: string) {
   const parts = absolutePath.split(path.sep);

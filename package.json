@@ -6,8 +6,7 @@
     "eslint:fix": "yarn eslint:check --fix",
     "eslint:check": "yarn run eslint './packages/**/*.{ts,tsx}'",
     "prettier:fix": "yarn run prettier --write './packages/**/*.{ts,tsx,css}'",
-    "prettier:check": "yarn run prettier --check './packages/**/*.{ts,tsx,css}'",
-    "postinstall": "patch-package"
+    "prettier:check": "yarn run prettier --check './packages/**/*.{ts,tsx,css}'"
   },
   "dependencies": {
     "@vkontakte/icons": "^2.128.0",
@@ -25,6 +24,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@rollup/plugin-typescript": "^11.1.6",
     "@storybook/addon-a11y": "^8.1.10",
     "@storybook/addon-essentials": "^8.1.10",
     "@storybook/addon-interactions": "^8.1.10",
@@ -44,7 +44,6 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.2",
     "prettier": "^3.3.2",
-    "patch-package": "^8.0.0",
     "storybook": "^8.1.10",
     "swc-loader": "^0.2.6",
     "typescript": "^5.4.5",
