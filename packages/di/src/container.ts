@@ -30,6 +30,7 @@ export class DIContainer {
   }
 
   private isIsolated = false;
+  private isDestroyed = false;
 
   private readonly children: Map<string, DIContainer> = new Map();
   private readonly container: DependencyContainer;
@@ -124,17 +125,31 @@ export class DIContainer {
    * Позволяет удалить контейнер
    * */
   public async destroy() {
-    if (this.parent) {
-      Array.from(this.instances.values()).forEach((instance) => {
-        if (isDestroyable(instance)) {
-          instance[destroy]();
-        }
-      });
+    if (this.isDestroyed) {
+      return;
+    }
 
-      await this.container.dispose();
-      this.parent.children.delete(this.name);
-    } else {
+    if (!this.parent) {
       throw new Error('Cannot destroy root container!');
+    }
+
+    Array.from(this.instances.keys()).forEach((Ctor) => this.destroyInstance(Ctor));
+
+    await this.container.dispose();
+
+    this.parent.children.delete(this.name);
+    this.isDestroyed = true;
+  }
+
+  /**
+   * Позволяет вызвать деструктор у конкретного инстанса
+   * */
+  public destroyInstance(Ctor: Constructor<Partial<Destroyable>>) {
+    const instance = this.instances.get(Ctor);
+
+    if (isDestroyable(instance)) {
+      instance[destroy]();
+      this.instances.delete(Ctor);
     }
   }
 

@@ -1,12 +1,11 @@
 import { LazyMotion } from 'framer-motion';
 import type { PropsWithChildren } from 'react';
-import { DIProvider, rootContainer } from '@skinner/di';
 import { createRootRoute, Outlet } from '@tanstack/react-router';
 import { AdaptivityProvider, AppRoot, ConfigProvider, PanelHeader, SplitCol, SplitLayout } from '@vkontakte/vkui';
 
 import { Sidebar } from './components';
 
-import { SessionProvider } from '../../services';
+import { SessionProvider } from '../../models';
 
 import { loadFramerMotionFeatures } from './framerMotion';
 
@@ -18,24 +17,22 @@ type RootProps = PropsWithChildren;
 
 function Root({ children = <Outlet /> }: RootProps): JSX.Element {
   return (
-    <DIProvider instance={rootContainer}>
-      <SessionProvider>
-        <LazyMotion features={loadFramerMotionFeatures}>
-          <ConfigProvider platform="android" appearance="dark">
-            <AdaptivityProvider>
-              <AppRoot>
-                <SplitLayout header={<PanelHeader delimiter="none" />}>
-                  <Sidebar />
-                  <SplitCol className={styles.root} width="100%" stretchedOnMobile autoSpaced>
-                    {children}
-                  </SplitCol>
-                </SplitLayout>
-              </AppRoot>
-            </AdaptivityProvider>
-          </ConfigProvider>
-        </LazyMotion>
-      </SessionProvider>
-    </DIProvider>
+    <SessionProvider>
+      <LazyMotion features={loadFramerMotionFeatures}>
+        <ConfigProvider platform="android" appearance="dark">
+          <AdaptivityProvider>
+            <AppRoot>
+              <SplitLayout header={<PanelHeader delimiter="none" />}>
+                <Sidebar />
+                <SplitCol className={styles.root} width="100%" stretchedOnMobile autoSpaced>
+                  {children}
+                </SplitCol>
+              </SplitLayout>
+            </AppRoot>
+          </AdaptivityProvider>
+        </ConfigProvider>
+      </LazyMotion>
+    </SessionProvider>
   );
 }
 

@@ -1,5 +1,5 @@
 import { constructorItemSchema } from '../../../db/entities/constructorItem/schema';
 
-export const constructorCreateSchema = constructorItemSchema.omit({
+export const constructorsItemPutSchema = constructorItemSchema.omit({
   id: true,
 });

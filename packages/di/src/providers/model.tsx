@@ -1,8 +1,8 @@
 import { createContext, PropsWithChildren, useContext, useEffect, useRef, useState } from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { runInAction } from 'mobx';
-import { destroy, init, update } from '../symbols';
-import { isDestroyable, isInitable, isUpdatable } from '../internal/guards';
+import { init, update } from '../symbols';
+import { isInitable, isUpdatable } from '../internal/guards';
 import { InferProps, ModelInstanceType } from './types';
 import { useContainer } from './container';
 import { useMemoizeProps, usePostponedEffect } from '../internal/utils';
@@ -34,10 +34,6 @@ export const createProvider = <
         }
       });
 
-      if (isInitable(res)) {
-        res[init](restProps);
-      }
-
       return res as ModelType;
     });
 
@@ -51,14 +47,15 @@ export const createProvider = <
       });
     }, useMemoizeProps(restProps));
 
-    useEffect(
-      () => () => {
-        if (isDestroyable(instance)) {
-          instance[destroy]();
-        }
-      },
-      [],
-    );
+    useEffect(() => {
+      if (isInitable(instance)) {
+        instance[init](restProps);
+      }
+
+      return () => {
+        container.destroyInstance(ModelClass);
+      };
+    }, []);
 
     return <ModelContext.Provider value={instance}>{children}</ModelContext.Provider>;
   };

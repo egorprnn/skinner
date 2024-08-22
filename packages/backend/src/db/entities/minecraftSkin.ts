@@ -30,10 +30,6 @@ export class MinecraftSkin {
   @ManyToMany(() => User, (user) => user.minecraft_skins)
   declare users: User[];
 
-  private get s3_key() {
-    return `minecraft-skin-${this.id}`;
-  }
-
   declare url?: string;
   @AfterLoad()
   @AfterUpdate()
@@ -73,6 +69,10 @@ export class MinecraftSkin {
         ContentType: blob.type,
       })
       .catch(Sentry.captureException);
+  }
+
+  private get s3_key() {
+    return `minecraft-skin-${this.id}`;
   }
 
   toJSON() {

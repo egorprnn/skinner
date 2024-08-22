@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 import { Button, type ButtonProps } from '@vkontakte/vkui';
 
-import { useSession } from '../../services';
+import { useSession } from '../../models';
 
 export type AuthButtonProps = Omit<ButtonProps, 'href' | 'loading' | 'disabled' | 'children'>;
 

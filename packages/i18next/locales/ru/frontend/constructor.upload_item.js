@@ -12,5 +12,9 @@ export default {
 
   description_input_title: 'Описание элемента',
 
+  category_input_title: 'Категория',
+
+  tags_input_title: 'Теги',
+
   save: 'Загрузить',
 };

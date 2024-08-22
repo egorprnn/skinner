@@ -8,16 +8,24 @@ export const i18nextInitialization = i18next
   .use(LanguageDetector)
   .use(
     // @ts-expect-error
-    i18nextResourcesToBackend((language, namespace) => {
-      if (namespace.startsWith('shared.')) {
-        return import(/* @vite-ignore */ `../../i18next/locales/${language}/${namespace}.js`);
-      }
-
+    i18nextResourcesToBackend(async (language, namespace) => {
       if (typeof window !== 'undefined') {
+        if (namespace.startsWith('shared.')) {
+          return import(/* @vite-ignore */ `../../i18next/locales/${language}/${namespace}.js`);
+        }
+
         return import(/* @vite-ignore */ `../../i18next/locales/${language}/frontend/${namespace}.js`);
       }
 
-      return import(/* @vite-ignore */ `../../i18next/locales/${language}/backend/${namespace}.js`);
+      console.log(namespace);
+
+      if (namespace.startsWith('shared.')) {
+        return import(/* @vite-ignore */ `../locales/${language}/${namespace}.js`).then((module) => module.default);
+      }
+
+      return import(/* @vite-ignore */ `../locales/${language}/backend/${namespace}.js`).then(
+        (module) => module.default,
+      );
     }),
   )
   .init({

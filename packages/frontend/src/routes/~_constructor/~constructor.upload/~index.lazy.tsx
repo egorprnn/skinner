@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { observer } from 'mobx-react-lite';
 import { useBeforeUnload } from 'react-use';
 import { useForm } from '@tanstack/react-form';
 import { useTranslation } from 'react-i18next';
@@ -7,7 +8,7 @@ import { zodValidator } from '@tanstack/zod-form-adapter';
 import { createLazyFileRoute } from '@tanstack/react-router';
 import { MinecraftTextureVariant } from '@skinner/minecraft-auth';
 import { InnerHTML, ModalFooter, DragAndDropInput } from '@skinner/ui';
-import { constructorCreateSchema } from '@skinner/backend/schema/constructor/create';
+import { constructorsItemPutSchema } from '@skinner/backend/schema/constructors/item';
 import {
   Flex,
   Input,
@@ -22,23 +23,25 @@ import {
   SegmentedControl,
   CustomScrollView,
   useAdaptivityWithJSMediaQueries,
+  CustomSelect,
+  FormLayoutGroup,
+  ChipsSelect,
 } from '@vkontakte/vkui';
 
 import { ModalPage } from '../../~__root/components';
 
-import { ConstructorUploadItemViewModelProvider } from './models';
+import { ConstructorUploadViewModelProvider, useConstructorUploadViewModelProvider } from './models';
 
 import styles from './index.module.css';
 
-export const ConstructorUploadItem = () => {
+export const ConstructorUploadItem = observer(() => {
   const { viewWidth } = useAdaptivityWithJSMediaQueries();
   const { t } = useTranslation(['constructor.upload_item', 'shared.zod', 'shared.db.schema.constructor_item']);
 
-  const form = useForm<z.infer<typeof constructorCreateSchema>, ReturnType<typeof zodValidator>>({
-    onSubmit: async ({ value }) => {
-      // Do something with form data
-      console.log(value, 3242343);
-    },
+  const model = useConstructorUploadViewModelProvider();
+
+  const form = useForm<z.infer<typeof constructorsItemPutSchema>, ReturnType<typeof zodValidator>>({
+    onSubmit: ({ value }) => model.upload(value),
     defaultValues: {
       title: '',
       description: '',
@@ -50,7 +53,7 @@ export const ConstructorUploadItem = () => {
   const isTouched = form.useStore((state) => state.isTouched);
   const variant = form.useStore((state) => state.values.variant);
 
-  useBeforeUnload(isTouched, t('common:unsaved_changed'));
+  useBeforeUnload(isTouched, t('common:unsaved_changes'));
 
   return (
     <ModalPage size="m" dynamicContentHeight>
@@ -67,12 +70,14 @@ export const ConstructorUploadItem = () => {
           <form.Field
             name="file"
             validators={{
-              onChangeAsync: constructorCreateSchema.shape.file,
+              onChangeAsync: constructorsItemPutSchema.shape.file,
             }}
           >
             {(field) => {
               const hasErrors = Boolean(field.state.meta.errors.length);
-              const hasValidPreview = Boolean(!hasErrors && !field.state.meta.isValidating && field.state.value);
+              const hasValidPreview = Boolean(
+                !hasErrors && (!field.state.meta.isValidating || field.form.state.isSubmitting) && field.state.value,
+              );
 
               return (
                 <FormItem status={hasErrors ? 'error' : 'default'}>
@@ -83,7 +88,7 @@ export const ConstructorUploadItem = () => {
                   >
                     <SkinViewerLazy
                       width={250}
-                      height={300}
+                      height={270}
                       model={variant}
                       skin={(hasValidPreview && field.state.value) || undefined}
                       enableRotate
@@ -144,7 +149,7 @@ export const ConstructorUploadItem = () => {
           <form.Field
             name="title"
             validators={{
-              onChange: constructorCreateSchema.shape.title,
+              onChange: constructorsItemPutSchema.shape.title,
             }}
           >
             {(field) => (
@@ -156,8 +161,8 @@ export const ConstructorUploadItem = () => {
               >
                 <Input
                   value={field.state.value}
-                  minLength={constructorCreateSchema.shape.title.minLength!}
-                  maxLength={constructorCreateSchema.shape.title.maxLength!}
+                  minLength={constructorsItemPutSchema.shape.title.minLength!}
+                  maxLength={constructorsItemPutSchema.shape.title.maxLength!}
                   onChange={({ target: { value } }) => field.handleChange(value)}
                 />
               </FormItem>
@@ -167,19 +172,47 @@ export const ConstructorUploadItem = () => {
           <form.Field
             name="description"
             validators={{
-              onChange: constructorCreateSchema.shape.description,
+              onChange: constructorsItemPutSchema.shape.description,
             }}
           >
             {(field) => (
               <FormItem top={t('constructor.upload_item:description_input_title')}>
                 <Textarea
                   value={field.state.value}
-                  maxLength={constructorCreateSchema.shape.description.maxLength!}
+                  maxLength={constructorsItemPutSchema.shape.description.maxLength!}
                   onChange={({ target: { value } }) => field.handleChange(value)}
                 />
               </FormItem>
             )}
           </form.Field>
+
+          <FormLayoutGroup mode="horizontal">
+            <form.Field
+              name="category"
+              validators={{
+                onChange: constructorsItemPutSchema.shape.description,
+              }}
+            >
+              {(field) => (
+                <FormItem top={t('constructor.upload_item:category_input_title')} required>
+                  <CustomSelect searchable />
+                </FormItem>
+              )}
+            </form.Field>
+
+            <form.Field
+              name="tags"
+              validators={{
+                onChange: constructorsItemPutSchema.shape.description,
+              }}
+            >
+              {(field) => (
+                <FormItem top={t('constructor.upload_item:tags_input_title')}>
+                  <ChipsSelect />
+                </FormItem>
+              )}
+            </form.Field>
+          </FormLayoutGroup>
 
           <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
             {([canSubmit, isSubmitting]) => (
@@ -196,12 +229,14 @@ export const ConstructorUploadItem = () => {
       </CustomScrollView>
     </ModalPage>
   );
-};
+});
+ConstructorUploadItem.displayName = 'ConstructorUploadItem';
 
 export const Route = createLazyFileRoute('/_constructor/constructor/upload/')({
   component: () => (
-    <ConstructorUploadItemViewModelProvider>
+    <ConstructorUploadViewModelProvider>
       <ConstructorUploadItem />
-    </ConstructorUploadItemViewModelProvider>
+    </ConstructorUploadViewModelProvider>
   ),
+  pendingComponent: () => <></>,
 });

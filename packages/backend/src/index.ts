@@ -28,15 +28,19 @@ import authMicrosoft, { AuthMicrosoftErrorCode } from './routes/auth/microsoft';
 
 import usersGet, { UsersGetErrorCode } from './routes/users/get';
 
-import constructorCreate from './routes/constructor/create';
+import constructorsItem from './routes/constructors/item';
+import constructorsCategory from './routes/constructors/category';
+import constructorsCategories from './routes/constructors/categories';
 
 const routes = app
   // Auth
   .route('/auth/microsoft', authMicrosoft)
   // Users
   .route('/users/get', usersGet)
-  // Constructor
-  .route('/constructor/create', constructorCreate);
+  // Constructors
+  .route('/constructors/item', constructorsItem)
+  .route('/constructors/category', constructorsCategory)
+  .route('/constructors/categories', constructorsCategories);
 export type APIRoutes = typeof routes;
 
 await dataSource.initialize();
@@ -57,4 +61,6 @@ export * from './routes/auth/microsoft';
 
 export * from './routes/users/get';
 
-export * from './routes/constructor/create';
+export * from './routes/constructors/item';
+export * from './routes/constructors/category';
+export * from './routes/constructors/categories';

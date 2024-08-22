@@ -11,7 +11,8 @@ export const constructorItemSchema = z.object({
     .string({
       description: 'ID',
     })
-    .min(1),
+    .min(1)
+    .max(64),
   title: z
     .string({
       description: 'Title',
@@ -27,7 +28,7 @@ export const constructorItemSchema = z.object({
   variant: z.enum([MinecraftTextureVariant.CLASSIC, MinecraftTextureVariant.SLIM], {
     description: 'Variant',
   }),
-  file: z.custom<Blob | undefined>().superRefine<Blob | undefined>(async (blob, context): blob is Blob => {
+  file: z.custom<Blob>().superRefine(async (blob, context) => {
     if (!blob) {
       context.addIssue({
         code: z.ZodIssueCode.custom,

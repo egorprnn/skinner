@@ -15,7 +15,7 @@
     "@vkontakte/vkui": "^6.4.1",
     "@vkontakte/vkui-tokens": "^4.49.0",
     "axios": "^1.6.7",
-    "hono": "^4.4.6",
+    "hono": "^4.5.5",
     "i18next": "^23.11.5",
     "i18next-browser-languagedetector": "^7.2.1",
     "i18next-resources-to-backend": "^1.2.1",

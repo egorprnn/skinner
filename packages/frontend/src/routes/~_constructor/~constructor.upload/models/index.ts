@@ -1,1 +1,1 @@
-export * from './ConstructorUploadItemViewModel';
+export * from './ConstructorUploadModel';

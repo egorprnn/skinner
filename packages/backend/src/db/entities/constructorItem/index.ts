@@ -1,24 +1,31 @@
 import * as Sentry from '@sentry/bun';
+import { instanceToPlain } from 'class-transformer';
 import { MinecraftTextureVariant } from '@skinner/minecraft-auth';
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { AfterLoad, AfterUpdate, BeforeInsert, Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 
+import { User } from '../';
 import { S3 } from '../../../modules';
+
+import { constructorItemSchema } from './schema';
 
 @Entity()
 export class ConstructorItem {
-  @PrimaryGeneratedColumn('increment')
+  @PrimaryColumn({
+    type: 'char',
+    length: constructorItemSchema.shape.id.maxLength!,
+  })
   declare id: string;
 
   /**
    * Title
    */
-  @Column({ length: 64, nullable: false })
+  @Column({ length: constructorItemSchema.shape.title.maxLength!, nullable: false })
   declare title: string;
 
   /**
    * Description
    */
-  @Column({ length: 256 })
+  @Column({ length: constructorItemSchema.shape.description.maxLength! })
   declare description?: string;
 
   @Column({
@@ -28,8 +35,21 @@ export class ConstructorItem {
   })
   declare variant: MinecraftTextureVariant;
 
-  private get s3_key() {
-    return `constructor-item-${this.id}`;
+  declare url?: string;
+  @AfterLoad()
+  @AfterUpdate()
+  async loadUrl() {
+    const url = await S3.createPresignedUrl({
+      key: this.s3_key,
+    }).catch((error) => {
+      Sentry.captureException(error);
+    });
+
+    if (!url) {
+      return;
+    }
+
+    this.url = url;
   }
 
   private declare file?: Blob;
@@ -47,5 +67,21 @@ export class ConstructorItem {
         ContentType: this.file.type,
       })
       .catch(Sentry.captureException);
+  }
+
+  private get s3_key() {
+    return `constructor-item-${this.id}`;
+  }
+
+  /**
+   * Owner
+   */
+  @ManyToOne(() => User, (user) => user.constructor_items, {
+    eager: true,
+  })
+  declare owner: User;
+
+  toJSON() {
+    return instanceToPlain(this);
   }
 }

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Group, Placeholder, Spinner } from '@vkontakte/vkui';
 import { createLazyFileRoute } from '@tanstack/react-router';
 
-import { useSession } from '../../../services';
+import { useSession } from '../../../models';
 
 import { Panel } from '../../~__root/components';
 

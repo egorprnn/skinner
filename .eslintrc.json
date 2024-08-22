@@ -72,7 +72,6 @@
     "computed-property-spacing": ["error", "never"],
     "function-call-argument-newline": ["error", "consistent"],
     "new-parens": ["error", "always"],
-    "newline-per-chained-call": ["error"],
     "no-multiple-empty-lines": ["error", {
       "max": 1,
       "maxEOF": 1,
@@ -101,7 +100,6 @@
     "arrow-parens": ["error", "always"],
     "arrow-spacing": ["error"],
     "no-this-before-super": ["error"],
-    "no-useless-constructor": ["error"],
     "no-var": ["error"],
     "object-shorthand": ["error"],
     "prefer-arrow-callback": ["error"],

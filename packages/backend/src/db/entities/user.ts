@@ -1,9 +1,10 @@
 import { Exclude, instanceToPlain } from 'class-transformer';
 import { MinecraftAuth, MinecraftTextureState } from '@skinner/minecraft-auth';
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
 
 import { MinecraftSkin } from './minecraftSkin';
 import { MinecraftCape } from './minecraftCape';
+import { ConstructorItem } from './';
 
 @Entity()
 export class User {
@@ -43,7 +44,9 @@ export class User {
   /**
    * Minecraft active skin
    */
-  @ManyToOne(() => MinecraftSkin, (minecraftSkin) => minecraftSkin.users)
+  @ManyToOne(() => MinecraftSkin, (minecraftSkin) => minecraftSkin.users, {
+    eager: true,
+  })
   @JoinColumn({ name: 'minecraft_active_skin_id' })
   declare minecraft_active_skin: MinecraftSkin;
 
@@ -60,6 +63,9 @@ export class User {
   @ManyToMany(() => MinecraftCape, (minecraftCape) => minecraftCape.users)
   @JoinTable()
   declare minecraft_capes: MinecraftCape[];
+
+  @OneToMany(() => ConstructorItem, (constructorItem) => constructorItem.owner)
+  declare constructor_items: ConstructorItem[];
 
   /**
    * Sync Minecraft profile data

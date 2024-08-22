@@ -6,8 +6,10 @@ import { SkinViewerLazy } from '@skinner/skinviewer';
 import { createLazyFileRoute, Outlet } from '@tanstack/react-router';
 
 import { Panel } from './~__root/components';
+import { Sections } from './~_constructor/components';
 
-import { useSession } from '../services';
+import { useSession } from '../models';
+import { ConstructorServiceProvider } from './~_constructor/models';
 
 import styles from './~_constructor/index.module.css';
 
@@ -31,7 +33,7 @@ const Constructor = observer(() => {
           enableZoom
           enableRotate
         />
-        {/*<Sections />*/}
+        <Sections />
       </Group>
       <Outlet />
     </Panel>
@@ -40,6 +42,9 @@ const Constructor = observer(() => {
 Constructor.displayName = 'Constructor';
 
 export const Route = createLazyFileRoute('/_constructor')({
-  component: Constructor,
-  notFoundComponent: () => <>test</>,
+  component: () => (
+    <ConstructorServiceProvider>
+      <Constructor />
+    </ConstructorServiceProvider>
+  ),
 });

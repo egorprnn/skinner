@@ -1,4 +1,4 @@
-import { constructorScope } from './symbols';
+import { constructorScope, isAbstract } from './symbols';
 import { Constructor } from '../types';
 import { Scope } from './scope';
 import { resolveInterceptor } from './resolve-interceptor';
@@ -16,14 +16,16 @@ export const constructorWrapper = <T extends Constructor<any>>(
   options?: { abstract?: boolean },
 ): T => {
   const proxy = new Proxy(Target, {
-    construct(Ctor, args: ConstructorParameters<T>) {
-      if (options?.abstract) {
-        throw new Error(`Cannot instantiate abstract class ${Ctor.toString()}`);
+    construct(Ctor, args: ConstructorParameters<T>, newTarget) {
+      for (let arg of args) {
+        if (arg?.constructor?.[isAbstract]) {
+          throw new Error(`Cannot inject abstract class ${arg.constructor.toString()}`);
+        }
       }
 
       resolveTransformer.run(proxy, args);
 
-      const instance = new Ctor(...args);
+      const instance = Reflect.construct(Ctor, args, newTarget);
 
       resolveInterceptor.run({
         type,
@@ -37,6 +39,8 @@ export const constructorWrapper = <T extends Constructor<any>>(
 
   // @ts-expect-error TS7053: Element implicitly has an any type because expression of type unique symbol can't be used to index type Constructor<any>
   Target[constructorScope] = type;
+  // @ts-expect-error TS7053: Element implicitly has an any type because expression of type unique symbol can't be used to index type Constructor<any>
+  Target[isAbstract] = options?.abstract;
 
   Reflect.defineMetadata('design:paramtypes', Reflect.getMetadata('design:paramtypes', Target) || [], proxy);
 

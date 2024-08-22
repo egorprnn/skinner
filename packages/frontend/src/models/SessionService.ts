@@ -23,7 +23,7 @@ export class SessionService {
 
   private _api = hc<APIRoutes>(API_URL, {
     headers: () => ({
-      Authorization: this.accessToken ?? '',
+      Authorization: this._accessToken ?? '',
     }),
   });
 
@@ -34,6 +34,7 @@ export class SessionService {
 
   constructor() {
     makeAutoObservable(this, {
+      // @ts-expect-error
       _api: false,
     });
 
@@ -144,8 +145,6 @@ export class SessionService {
 
         this._user = user;
         this._userCache.set(user);
-
-        console.log(accessToken);
 
         router.navigate({
           to: '/',

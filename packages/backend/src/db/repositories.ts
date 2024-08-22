@@ -1,10 +1,12 @@
 import { dataSource } from './dataSource';
 
-import { MinecraftCape, MinecraftSkin, User } from './entities';
+import { ConstructorCategory, ConstructorItem, MinecraftCape, MinecraftSkin, User } from './entities';
 
 export const userRepository = dataSource.getRepository(User);
 export const minecraftSkinRepository = dataSource.getRepository(MinecraftSkin);
 export const minecraftCapeRepository = dataSource.getRepository(MinecraftCape);
+export const constructorItemRepository = dataSource.getRepository(ConstructorItem);
+export const constructorCategoryRepository = dataSource.getRepository(ConstructorCategory);
 
 // @ts-expect-error
 global.dataSource = dataSource;

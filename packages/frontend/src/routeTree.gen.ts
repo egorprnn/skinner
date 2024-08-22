@@ -28,6 +28,9 @@ const ConnectionsMicrosoftIndexLazyImport = createFileRoute(
 const ConstructorConstructorUploadIndexLazyImport = createFileRoute(
   '/_constructor/constructor/upload/',
 )()
+const ConstructorConstructorCategorycreateIndexLazyImport = createFileRoute(
+  '/_constructor/constructor/category_create/',
+)()
 
 // Create/Update Routes
 
@@ -73,6 +76,16 @@ const ConstructorConstructorUploadIndexLazyRoute =
     ),
   )
 
+const ConstructorConstructorCategorycreateIndexLazyRoute =
+  ConstructorConstructorCategorycreateIndexLazyImport.update({
+    path: '/category_create/',
+    getParentRoute: () => ConstructorConstructorLazyRoute,
+  } as any).lazy(() =>
+    import(
+      './routes/~_constructor/~constructor.category_create/~index.lazy'
+    ).then((d) => d.Route),
+  )
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -112,6 +125,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConnectionsMicrosoftIndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/_constructor/constructor/category_create/': {
+      id: '/_constructor/constructor/category_create/'
+      path: '/category_create'
+      fullPath: '/constructor/category_create'
+      preLoaderRoute: typeof ConstructorConstructorCategorycreateIndexLazyImport
+      parentRoute: typeof ConstructorConstructorLazyImport
+    }
     '/_constructor/constructor/upload/': {
       id: '/_constructor/constructor/upload/'
       path: '/upload'
@@ -130,6 +150,7 @@ export const routeTree = rootRoute.addChildren({
   ConstructorLazyRoute: ConstructorLazyRoute.addChildren({
     ConstructorConstructorLazyRoute:
       ConstructorConstructorLazyRoute.addChildren({
+        ConstructorConstructorCategorycreateIndexLazyRoute,
         ConstructorConstructorUploadIndexLazyRoute,
       }),
   }),
@@ -165,11 +186,16 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "~_constructor/~constructor.lazy.tsx",
       "parent": "/_constructor",
       "children": [
+        "/_constructor/constructor/category_create/",
         "/_constructor/constructor/upload/"
       ]
     },
     "/connections/microsoft/": {
       "filePath": "~connections/~microsoft/~index.lazy.tsx"
+    },
+    "/_constructor/constructor/category_create/": {
+      "filePath": "~_constructor/~constructor.category_create/~index.lazy.tsx",
+      "parent": "/_constructor/constructor"
     },
     "/_constructor/constructor/upload/": {
       "filePath": "~_constructor/~constructor.upload/~index.lazy.tsx",

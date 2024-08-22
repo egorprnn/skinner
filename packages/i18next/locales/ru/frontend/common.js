@@ -8,5 +8,5 @@ export default {
   skin_texture_variant_classic: 'Classic',
   skin_texture_variant_slim: 'Slim',
 
-  unsaved_changed: 'У вас есть несохраненные данные, после перезагрузки они не сохранятся.',
+  unsaved_changes: 'У вас есть несохраненные данные, после перезагрузки они не сохранятся.',
 };
