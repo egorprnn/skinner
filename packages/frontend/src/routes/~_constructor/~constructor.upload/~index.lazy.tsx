@@ -26,6 +26,7 @@ import {
   CustomSelect,
   FormLayoutGroup,
   ChipsSelect,
+  CustomSelectOption,
 } from '@vkontakte/vkui';
 
 import { ModalPage } from '../../~__root/components';
@@ -54,6 +55,8 @@ export const ConstructorUploadItem = observer(() => {
   const variant = form.useStore((state) => state.values.variant);
 
   useBeforeUnload(isTouched, t('common:unsaved_changes'));
+
+  console.log(model.categoriesOptions);
 
   return (
     <ModalPage size="m" dynamicContentHeight>
@@ -195,7 +198,17 @@ export const ConstructorUploadItem = observer(() => {
             >
               {(field) => (
                 <FormItem top={t('constructor.upload_item:category_input_title')} required>
-                  <CustomSelect searchable />
+                  <CustomSelect<(typeof model.categoriesOptions)[number]>
+                    options={model.categoriesOptions}
+                    fetching={model.categoriesOptions === undefined}
+                    renderOption={({ option: { label, parentLabel, last }, ...restProps }) => (
+                      <>
+                        {parentLabel && <CustomSelectOption disabled>{parentLabel}</CustomSelectOption>}
+                        <CustomSelectOption {...restProps}>{label}</CustomSelectOption>
+                      </>
+                    )}
+                    searchable
+                  />
                 </FormItem>
               )}
             </form.Field>
