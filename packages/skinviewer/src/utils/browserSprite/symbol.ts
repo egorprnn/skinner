@@ -25,8 +25,6 @@ export class BrowserSymbol {
 
     this.#mounted = true;
 
-    console.log(target, this.#node);
-
     target.appendChild(this.#node);
 
     return this.#node;

@@ -5,13 +5,14 @@
 
 .in {
   height: 100%;
-  display: flex;
 }
 
 .skin {
-  flex: none;
   overflow: hidden;
   min-width: calc(100% / 2.5);
-  margin-right: var(--vkui--spacing_size_xl);
   border-radius: var(--vkui--size_border_radius--regular);
+}
+
+.sections {
+  overflow: hidden;
 }

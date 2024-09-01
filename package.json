@@ -9,10 +9,10 @@
     "prettier:check": "yarn run prettier --check './packages/**/*.{ts,tsx,css}'"
   },
   "dependencies": {
-    "@vkontakte/icons": "^2.128.0",
+    "@vkontakte/icons": "^2.136.0",
     "@vkontakte/vkjs": "^0.32.4",
-    "@vkontakte/vkui": "^6.4.1",
-    "@vkontakte/vkui-tokens": "^4.49.0",
+    "@vkontakte/vkui": "^6.5.2",
+    "@vkontakte/vkui-tokens": "^4.53.3",
     "axios": "^1.6.7",
     "hono": "^4.5.5",
     "i18next": "^23.11.5",

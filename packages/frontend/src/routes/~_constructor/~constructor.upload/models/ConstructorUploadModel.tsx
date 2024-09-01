@@ -1,3 +1,4 @@
+import { makeAutoObservable } from 'mobx';
 import type { InferRequestType } from 'hono';
 import { createProvider, scope } from '@skinner/di';
 import type { CustomSelectOptionInterface } from '@vkontakte/vkui';
@@ -16,7 +17,9 @@ export class ConstructorUploadModel {
   constructor(
     private sessionService: SessionService,
     private constructorService: ConstructorService,
-  ) {}
+  ) {
+    makeAutoObservable(this);
+  }
 
   upload(data: InferRequestType<typeof this.sessionService.api.constructors.item.$put>['form']) {
     this.sessionService.api.constructors.item.$put({
@@ -24,7 +27,11 @@ export class ConstructorUploadModel {
     });
   }
 
-  get categoriesOptions(): CategoriesOptions {
+  get hasCategoriesOptions() {
+    return Boolean(this.constructorService.categories?.length);
+  }
+
+  get categoriesOptions() {
     return (
       this.constructorService.categories?.reduce<CategoriesOptions>((categoriesOptions, { id: parentId, children }) => {
         if (children.length) {

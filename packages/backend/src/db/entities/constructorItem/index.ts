@@ -3,8 +3,9 @@ import { instanceToPlain } from 'class-transformer';
 import { MinecraftTextureVariant } from '@skinner/minecraft-auth';
 import { AfterLoad, AfterUpdate, BeforeInsert, Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 
-import { User } from '../';
+import { User } from '../user';
 import { S3 } from '../../../modules';
+import { ConstructorCategory } from '../constructorCategory';
 
 import { constructorItemSchema } from './schema';
 
@@ -34,6 +35,22 @@ export class ConstructorItem {
     nullable: false,
   })
   declare variant: MinecraftTextureVariant;
+
+  /**
+   * Owner
+   */
+  @ManyToOne(() => User, (user) => user.constructor_items, {
+    eager: true,
+  })
+  declare owner: User;
+
+  /**
+   * Category
+   */
+  @ManyToOne(() => ConstructorCategory, (constructorCategory) => constructorCategory.items, {
+    eager: true,
+  })
+  declare category: ConstructorCategory;
 
   declare url?: string;
   @AfterLoad()
@@ -72,14 +89,6 @@ export class ConstructorItem {
   private get s3_key() {
     return `constructor-item-${this.id}`;
   }
-
-  /**
-   * Owner
-   */
-  @ManyToOne(() => User, (user) => user.constructor_items, {
-    eager: true,
-  })
-  declare owner: User;
 
   toJSON() {
     return instanceToPlain(this);

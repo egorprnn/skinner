@@ -1,17 +1,30 @@
 import { classNames } from '@vkontakte/vkjs';
 import {
-  Button,
   Cell,
-  FixedLayout,
-  Group,
   Panel,
-  PanelHeader,
+  Group,
+  Button,
   SplitCol,
+  PanelHeader,
+  FixedLayout,
   useAdaptivityConditionalRender,
 } from '@vkontakte/vkui';
 import styles from './Sidebar.module.css';
+import { useTranslation } from 'react-i18next';
+import { useNavigate, useLocation } from '@tanstack/react-router';
+
+const SIDEBAR_TABS = [
+  {
+    icon: null,
+    title: 'sidebar:tab_constructor',
+    path: '/constructor',
+  },
+] as const;
 
 export const Sidebar = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { t } = useTranslation(['sidebar']);
   const { viewWidth } = useAdaptivityConditionalRender();
 
   if (!viewWidth.tabletPlus) {
@@ -40,9 +53,20 @@ export const Sidebar = () => {
           }
         />
         <Group>
-          <Cell>modal 1</Cell>
-          <Cell>modal 2</Cell>
-          <Cell>alert</Cell>
+          {SIDEBAR_TABS.map(({ icon, title, path }) => (
+            <Cell
+              key={path}
+              before={icon}
+              activated={location.pathname.startsWith(path)}
+              onClick={() =>
+                navigate({
+                  to: path,
+                })
+              }
+            >
+              {t(title)}
+            </Cell>
+          ))}
         </Group>
         <FixedLayout vertical="bottom">
           <Group>

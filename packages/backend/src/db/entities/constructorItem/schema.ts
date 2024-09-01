@@ -29,7 +29,7 @@ export const constructorItemSchema = z.object({
     description: 'Variant',
   }),
   file: z.custom<Blob>().superRefine(async (blob, context) => {
-    if (!blob) {
+    if (!blob?.size) {
       context.addIssue({
         code: z.ZodIssueCode.custom,
         message: i18next.t('shared.db.schema.constructor_item:file_invalid_empty'),

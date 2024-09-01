@@ -33,7 +33,7 @@ export class ConstructorService {
   }
 
   get activeCategoryChildren() {
-    return this._categories?.[this._activeCategoryIndex].children;
+    return this._categories?.[this._activeCategoryIndex]?.children;
   }
 
   get activeCategoryHasChildren() {
@@ -53,7 +53,7 @@ export class ConstructorService {
       categoryIndex = 0;
     }
 
-    let categoryChildrenIndex = this._categories[categoryIndex].children.findIndex((category) => category.id === id);
+    let categoryChildrenIndex = this._categories[categoryIndex]?.children.findIndex((category) => category.id === id);
 
     if (categoryChildrenIndex === -1) {
       categoryChildrenIndex = 0;

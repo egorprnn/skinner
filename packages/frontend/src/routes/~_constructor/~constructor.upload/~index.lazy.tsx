@@ -25,7 +25,6 @@ import {
   useAdaptivityWithJSMediaQueries,
   CustomSelect,
   FormLayoutGroup,
-  ChipsSelect,
   CustomSelectOption,
 } from '@vkontakte/vkui';
 
@@ -45,18 +44,18 @@ export const ConstructorUploadItem = observer(() => {
     onSubmit: ({ value }) => model.upload(value),
     defaultValues: {
       title: '',
+      category: '',
       description: '',
+      file: new Blob(),
       variant: MinecraftTextureVariant.CLASSIC,
     },
     validatorAdapter: zodValidator(),
   });
 
-  const isTouched = form.useStore((state) => state.isTouched);
+  const isDirty = form.useStore((state) => state.isDirty);
   const variant = form.useStore((state) => state.values.variant);
 
-  useBeforeUnload(isTouched, t('common:unsaved_changes'));
-
-  console.log(model.categoriesOptions);
+  useBeforeUnload(isDirty, t('common:unsaved_changes'));
 
   return (
     <ModalPage size="m" dynamicContentHeight>
@@ -79,7 +78,9 @@ export const ConstructorUploadItem = observer(() => {
             {(field) => {
               const hasErrors = Boolean(field.state.meta.errors.length);
               const hasValidPreview = Boolean(
-                !hasErrors && (!field.state.meta.isValidating || field.form.state.isSubmitting) && field.state.value,
+                !hasErrors &&
+                  (!field.state.meta.isValidating || field.form.state.isSubmitting) &&
+                  field.state.value.size,
               );
 
               return (
@@ -193,35 +194,29 @@ export const ConstructorUploadItem = observer(() => {
             <form.Field
               name="category"
               validators={{
-                onChange: constructorsItemPutSchema.shape.description,
+                onChange: constructorsItemPutSchema.shape.category,
               }}
             >
               {(field) => (
-                <FormItem top={t('constructor.upload_item:category_input_title')} required>
+                <FormItem
+                  top={t('constructor.upload_item:category_input_title')}
+                  status={field.state.meta.errors.length ? 'error' : 'default'}
+                  required
+                >
                   <CustomSelect<(typeof model.categoriesOptions)[number]>
+                    value={field.state.value}
+                    searchable={!field.state.value}
                     options={model.categoriesOptions}
-                    fetching={model.categoriesOptions === undefined}
-                    renderOption={({ option: { label, parentLabel, last }, ...restProps }) => (
+                    fetching={!model.hasCategoriesOptions}
+                    renderOption={({ option: { label }, ...restProps }) => (
                       <>
-                        {parentLabel && <CustomSelectOption disabled>{parentLabel}</CustomSelectOption>}
                         <CustomSelectOption {...restProps}>{label}</CustomSelectOption>
                       </>
                     )}
-                    searchable
+                    forceDropdownPortal={false}
+                    onChange={({ target: { value } }) => field.handleChange(value)}
+                    allowClearButton
                   />
-                </FormItem>
-              )}
-            </form.Field>
-
-            <form.Field
-              name="tags"
-              validators={{
-                onChange: constructorsItemPutSchema.shape.description,
-              }}
-            >
-              {(field) => (
-                <FormItem top={t('constructor.upload_item:tags_input_title')}>
-                  <ChipsSelect />
                 </FormItem>
               )}
             </form.Field>

@@ -3,10 +3,10 @@ import { Hono } from 'hono';
 import { zValidator } from '@skinner/hono';
 
 import { constructorsItemPutSchema } from './schema';
-import { ConstructorItem, constructorItemRepository } from '../../../db';
+import { ConstructorCategory, ConstructorItem, constructorItemRepository } from '../../../db';
 
 const app = new Hono().put('/', zValidator('form', constructorsItemPutSchema), async (context) => {
-  const { title, description, variant, file } = await context.req.valid('form');
+  const { title, description, variant, category, file } = await context.req.valid('form');
 
   const hash = crypto
     .createHash('sha256')
@@ -30,6 +30,9 @@ const app = new Hono().put('/', zValidator('form', constructorsItemPutSchema), a
   constructorItem.description = description;
   constructorItem.variant = variant;
   constructorItem['file'] = file;
+
+  constructorItem.category = new ConstructorCategory();
+  constructorItem.category.id = category;
 
   await constructorItemRepository.save(constructorItem);
 

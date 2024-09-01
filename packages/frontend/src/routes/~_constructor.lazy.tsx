@@ -1,7 +1,7 @@
 import { useRef } from 'react';
-import { Group } from '@vkontakte/vkui';
 import { observer } from 'mobx-react-lite';
 import { useMeasure } from '@react-hookz/web';
+import { Flex, Group } from '@vkontakte/vkui';
 import { SkinViewerLazy } from '@skinner/skinviewer';
 import { createLazyFileRoute, Outlet } from '@tanstack/react-router';
 
@@ -21,22 +21,29 @@ const Constructor = observer(() => {
   const [measures, inRef] = useMeasure<HTMLDivElement>();
 
   return (
-    <Panel className={styles.root}>
-      <Group getRootRef={inRef} className={styles.in} mode="card">
-        <SkinViewerLazy
-          getRootRef={skinRef}
-          className={styles.skin}
-          width={(measures?.width ?? 0) / 2.5}
-          height={measures?.height ?? 0}
-          skin={user?.minecraft_active_skin?.url}
-          enablePan
-          enableZoom
-          enableRotate
-        />
-        <Sections />
-      </Group>
+    <>
+      <Panel className={styles.root}>
+        <Group getRootRef={inRef} className={styles.in} mode="card">
+          <Flex gap="xl" noWrap>
+            <Flex.Item className={styles.skin}>
+              <SkinViewerLazy
+                getRootRef={skinRef}
+                width={(measures?.width ?? 0) / 2.5}
+                height={measures?.height ?? 0}
+                skin={user?.minecraft_active_skin?.url}
+                enablePan
+                enableZoom
+                enableRotate
+              />
+            </Flex.Item>
+            <Flex.Item className={styles.sections}>
+              <Sections />
+            </Flex.Item>
+          </Flex>
+        </Group>
+      </Panel>
       <Outlet />
-    </Panel>
+    </>
   );
 });
 Constructor.displayName = 'Constructor';

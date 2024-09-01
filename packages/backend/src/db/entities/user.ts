@@ -3,8 +3,7 @@ import { MinecraftAuth, MinecraftTextureState } from '@skinner/minecraft-auth';
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
 
 import { MinecraftSkin } from './minecraftSkin';
-import { MinecraftCape } from './minecraftCape';
-import { ConstructorItem } from './';
+import { MinecraftCape, ConstructorItem } from './';
 
 @Entity()
 export class User {

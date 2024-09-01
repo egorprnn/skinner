@@ -12,6 +12,7 @@ export default defineConfig(({ command }) => ({
   base: '/',
   build: {
     minify: true,
+    sourcemap: command !== 'build',
     rollupOptions: {
       output: {
         manualChunks: (id) => {
@@ -78,7 +79,7 @@ export default defineConfig(({ command }) => ({
         noSlot: true,
       },
     }),
-    command === 'build' ? typescript() : undefined,
+    typescript(),
     react({
       tsDecorators: command !== 'build',
     }),
@@ -102,10 +103,6 @@ function getModuleNameFromPath(absolutePath: string) {
   const nodeModulesIndex = parts.lastIndexOf('node_modules');
 
   if (nodeModulesIndex !== -1 && parts[nodeModulesIndex + 1]) {
-    /*if (moduleName.startsWith('@') && parts[nodeModulesIndex + 2]) {
-      return `${moduleName}/${parts[nodeModulesIndex + 2]}`;
-    }*/
-
     return parts[nodeModulesIndex + 1];
   }
 
