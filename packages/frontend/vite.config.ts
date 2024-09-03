@@ -13,6 +13,7 @@ export default defineConfig(({ command }) => ({
   build: {
     minify: true,
     sourcemap: command !== 'build',
+    modulePreload: false,
     rollupOptions: {
       output: {
         manualChunks: (id) => {
