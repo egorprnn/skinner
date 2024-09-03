@@ -29,10 +29,6 @@ export default defineConfig(({ command }) => ({
             return 'i18next';
           }
 
-          if (id.includes('framer-motion')) {
-            return 'animations';
-          }
-
           if (id.includes('mobx') || id.includes('mobx-react-lite')) {
             return 'state-management';
           }
