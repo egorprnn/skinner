@@ -16,16 +16,16 @@ export default defineConfig(({ command }) => ({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
+          if (id.includes('@vkontakte')) {
+            return;
+          }
+
           if (id.includes('@swc') || id.includes('@babel') || id.includes('tslib')) {
             return 'helpers';
           }
 
           if (id.includes('three') || id.includes('skinview3d') || id.includes('skinview-utils')) {
             return '3d';
-          }
-
-          if (id.includes('@vkontakte') || id.includes('@floating-ui')) {
-            return 'vkontakte';
           }
 
           if (id.includes('i18next') || id.includes('i18next-browser-languagedetector')) {
