@@ -13,7 +13,6 @@ export default defineConfig(({ command }) => ({
   build: {
     minify: true,
     sourcemap: command !== 'build',
-    modulePreload: false,
     rollupOptions: {
       output: {
         manualChunks: (id) => {
@@ -25,8 +24,16 @@ export default defineConfig(({ command }) => ({
             return 'helpers';
           }
 
+          if (id.includes('three') || id.includes('skinview3d') || id.includes('skinview-utils')) {
+            return '3d';
+          }
+
           if (id.includes('i18next') || id.includes('i18next-browser-languagedetector')) {
             return 'i18next';
+          }
+
+          if (id.includes('framer-motion')) {
+            return 'animations';
           }
 
           if (id.includes('mobx') || id.includes('mobx-react-lite')) {
