@@ -2,7 +2,8 @@
   "private": true,
   "name": "@skinner/backend",
   "scripts": {
-    "start": "bun run ./src/index.ts",
+    "start": "./dist/index",
+    "build": "bun build --compile --minify --sourcemap ./src/index.ts --outfile ./dist/index",
     "dev": "MODE=development bun run --hot ./src/index.ts"
   },
   "main": "./src/index.ts",
