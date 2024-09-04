@@ -17,8 +17,6 @@ export const i18nextInitialization = i18next
         return import(/* @vite-ignore */ `../../i18next/locales/${language}/frontend/${namespace}.js`);
       }
 
-      console.log(namespace);
-
       if (namespace.startsWith('shared.')) {
         return import(/* @vite-ignore */ `../locales/${language}/${namespace}.js`).then((module) => module.default);
       }
@@ -38,6 +36,12 @@ export const i18nextInitialization = i18next
       escapeValue: false,
     },
   });
+
+if (typeof window !== 'undefined') {
+  i18next.on('languageChanged', (lang) => {
+    document.documentElement.lang = lang;
+  });
+}
 
 setErrorMap((issue, context) => {
   let message: string;
