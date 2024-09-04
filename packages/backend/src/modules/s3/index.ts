@@ -19,13 +19,16 @@ export class S3 {
   });
 
   static createPresignedUrl({ key, ...options }: S3CreatePresignedUrlOptions) {
+    const expiresIn = 24 * 60 * 60; // 1 день, в секундах
+
     const command = new GetObjectCommand({
       Bucket: this.BUCKET_NAME,
       Key: key,
+      ResponseCacheControl: `public, max-age=${expiresIn}, immutable`,
     });
 
     return getSignedUrl(this.client, command, {
-      expiresIn: 24 * 60 * 60, // 1 день, в секундах
+      expiresIn,
       ...options,
     });
   }
