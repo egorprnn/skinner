@@ -3,10 +3,9 @@ import { API_URL } from '@skinner/constants';
 
 Sentry.init({
   dsn: 'https://0e2c97c1d5c0ec8d764600ea5e86c2a1@o280468.ingest.us.sentry.io/4507898470531072',
-  integrations: [Sentry.browserTracingIntegration(), Sentry.browserProfilingIntegration(), Sentry.replayIntegration()],
+  integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
   tracesSampleRate: 1.0,
   tracePropagationTargets: [API_URL],
-  profilesSampleRate: 1.0,
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1.0,
 });
