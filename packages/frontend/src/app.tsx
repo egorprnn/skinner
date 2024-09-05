@@ -1,9 +1,17 @@
 import * as Sentry from '@sentry/react';
-import { API_URL } from '@skinner/constants';
+import { API_URL, IS_DEVELOPMENT_MODE } from '@skinner/constants';
 
 Sentry.init({
-  dsn: 'https://0e2c97c1d5c0ec8d764600ea5e86c2a1@o280468.ingest.us.sentry.io/4507898470531072',
-  integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
+  dsn: !IS_DEVELOPMENT_MODE
+    ? 'https://0e2c97c1d5c0ec8d764600ea5e86c2a1@o280468.ingest.us.sentry.io/4507898470531072'
+    : '',
+  integrations: [
+    Sentry.browserTracingIntegration(),
+    Sentry.replayIntegration({
+      maskAllText: false,
+      maskAllInputs: false,
+    }),
+  ],
   tracesSampleRate: 1.0,
   tracePropagationTargets: [API_URL],
   replaysSessionSampleRate: 0.1,
