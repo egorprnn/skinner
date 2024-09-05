@@ -5,6 +5,7 @@ import react from '@vitejs/plugin-react-swc';
 import typescript from '@rollup/plugin-typescript';
 import { defineConfig } from 'vite';
 import { imagetools } from 'vite-imagetools';
+import { sentryVitePlugin } from '@sentry/vite-plugin';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import { TanStackRouterVite } from '@tanstack/router-vite-plugin';
 
@@ -12,7 +13,7 @@ export default defineConfig(({ command }) => ({
   base: '/',
   build: {
     minify: true,
-    sourcemap: command !== 'build',
+    sourcemap: true,
     rollupOptions: {
       output: {
         manualChunks: (id) => {
@@ -95,6 +96,15 @@ export default defineConfig(({ command }) => ({
         },
       ],
     }),
+    command === 'build' &&
+      sentryVitePlugin({
+        org: 'sknnr',
+        project: 'sknnr-frontend',
+        sourcemaps: {
+          filesToDeleteAfterUpload: 'dist/**/*.map',
+        },
+        authToken: process.env['SENTRY_AUTH_TOKEN'],
+      }),
   ],
 }));
 
