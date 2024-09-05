@@ -2,9 +2,9 @@
   "private": true,
   "name": "@skinner/backend",
   "scripts": {
-    "start": "./dist/index",
+    "start": "bun run --bun ./dist/index.js",
     "build": "bun build --target=bun --sourcemap=inline --outdir=dist ./src/index.ts && sentry-cli sourcemaps inject dist && bun sentry-cli sourcemaps upload dist",
-    "dev": "MODE=development bun run --hot ./src/index.ts"
+    "dev": "MODE=development bun run --bun --hot ./src/index.ts"
   },
   "main": "./src/index.ts",
   "exports": {
