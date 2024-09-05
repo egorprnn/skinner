@@ -21,6 +21,10 @@ export default defineConfig(({ command }) => ({
             return;
           }
 
+          if (id.includes('@sentry')) {
+            return 'sentry';
+          }
+
           if (id.includes('@swc') || id.includes('@babel') || id.includes('tslib')) {
             return 'helpers';
           }
