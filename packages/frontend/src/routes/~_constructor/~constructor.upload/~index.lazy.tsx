@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useBeforeUnload } from 'react-use';
 import { Icon16Add } from '@vkontakte/icons';
@@ -58,13 +57,6 @@ export const ConstructorUploadItem = observer(() => {
 
   useBeforeUnload(isDirty, t('common:unsaved_changes'));
 
-  useEffect(
-    () => () => {
-      model.formValues = form.state.values;
-    },
-    [],
-  );
-
   return (
     <ModalPage size="m" dynamicContentHeight onClose={handleClose}>
       <CustomScrollView autoHideScrollbar>
@@ -75,6 +67,9 @@ export const ConstructorUploadItem = observer(() => {
             event.stopPropagation();
 
             form.handleSubmit();
+          }}
+          onChange={() => {
+            model.formValues = form.state.values;
           }}
         >
           <form.Field

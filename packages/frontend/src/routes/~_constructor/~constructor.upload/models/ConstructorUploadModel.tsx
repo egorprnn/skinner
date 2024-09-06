@@ -15,7 +15,7 @@ type CategoriesOptions = Array<
   }
 >;
 
-@scope.container()
+@scope.transient()
 export class ConstructorUploadModel {
   private static readonly DEFAULT_FORM_VALUES = {
     title: '',
@@ -24,7 +24,7 @@ export class ConstructorUploadModel {
     file: new Blob(),
     variant: MinecraftTextureVariant.CLASSIC,
   } as const;
-  private _formValues: z.infer<typeof constructorsItemPutSchema> = ConstructorUploadModel.DEFAULT_FORM_VALUES;
+  private static _formValues: z.infer<typeof constructorsItemPutSchema> = ConstructorUploadModel.DEFAULT_FORM_VALUES;
 
   constructor(
     private sessionService: SessionService,
@@ -40,15 +40,15 @@ export class ConstructorUploadModel {
   }
 
   get formValues() {
-    return this._formValues;
+    return ConstructorUploadModel._formValues;
   }
 
-  set formValues(value) {
-    this._formValues = value;
+  set formValues(values) {
+    ConstructorUploadModel._formValues = values;
   }
 
   resetFormValue() {
-    this._formValues = ConstructorUploadModel.DEFAULT_FORM_VALUES;
+    ConstructorUploadModel._formValues = ConstructorUploadModel.DEFAULT_FORM_VALUES;
   }
 
   get hasCategoriesOptions() {
