@@ -11,7 +11,7 @@
   "dependencies": {
     "@vkontakte/icons": "^2.136.0",
     "@vkontakte/vkjs": "^0.32.4",
-    "@vkontakte/vkui": "^6.5.2",
+    "@vkontakte/vkui": "^6.6.0",
     "@vkontakte/vkui-tokens": "^4.53.3",
     "axios": "^1.6.7",
     "hono": "^4.5.5",
