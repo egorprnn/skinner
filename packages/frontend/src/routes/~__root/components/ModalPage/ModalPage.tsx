@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import {
   ModalRoot,
@@ -6,35 +7,42 @@ import {
   type ModalPageProps as ModalPageBaseProps,
 } from '@vkontakte/vkui';
 import { useNavigate, useRouter, type RootRoute, type RoutesByPath } from '@tanstack/react-router';
-import { useState } from 'react';
 
 export type ModalPageProps = Omit<ModalPageBaseProps, 'id' | 'nav'>;
 
-export const ModalPage = (props: ModalPageProps) => {
+export const ModalPage = ({ onClose, ...restProps }: ModalPageProps) => {
   const router = useRouter();
   const navigate = useNavigate();
 
-  const [activeModal, setActiveModel] = useState<string | undefined>('modal');
+  const [activeModal, setActiveModal] = useState<string | undefined>('modal');
 
   const handleClose = () => {
-    setActiveModel(undefined);
+    setActiveModal(undefined);
   };
 
   const handleClosed = () => {
-    const { pathname } = router.buildLocation({
-      to: router.latestLocation.pathname,
-    });
+    onClose?.();
 
-    navigate({
-      to: router.routesByPath[pathname as keyof RoutesByPath<RootRoute>].parentRoute.to,
-    });
+    const prevPathname = router.history.location.pathname;
+
+    router.history.back();
+
+    if (prevPathname === router.history.location.pathname) {
+      const { pathname } = router.buildLocation({
+        to: router.latestLocation.pathname,
+      });
+
+      navigate({
+        to: router.routesByPath[pathname as keyof RoutesByPath<RootRoute>].parentRoute.to,
+      });
+    }
   };
 
   return createPortal(
     <SplitLayout
       modal={
         <ModalRoot activeModal={activeModal} onClose={handleClose} onClosed={handleClosed}>
-          <ModalPageBase nav="modal" {...props} />
+          <ModalPageBase nav="modal" {...restProps} />
         </ModalRoot>
       }
     />,
