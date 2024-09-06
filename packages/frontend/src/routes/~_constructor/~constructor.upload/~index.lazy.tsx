@@ -1,11 +1,13 @@
 import { z } from 'zod';
+import { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useBeforeUnload } from 'react-use';
+import { Icon16Add } from '@vkontakte/icons';
 import { useForm } from '@tanstack/react-form';
 import { useTranslation } from 'react-i18next';
 import { SkinViewerLazy } from '@skinner/skinviewer';
 import { zodValidator } from '@tanstack/zod-form-adapter';
-import { createLazyFileRoute } from '@tanstack/react-router';
+import { createLazyFileRoute, useNavigate } from '@tanstack/react-router';
 import { MinecraftTextureVariant } from '@skinner/minecraft-auth';
 import { InnerHTML, ModalFooter, DragAndDropInput } from '@skinner/ui';
 import { constructorsItemPutSchema } from '@skinner/backend/schema/constructors/item';
@@ -26,6 +28,7 @@ import {
   CustomSelect,
   FormLayoutGroup,
   CustomSelectOption,
+  Tappable,
 } from '@vkontakte/vkui';
 
 import { ModalPage } from '../../~__root/components';
@@ -35,32 +38,37 @@ import { ConstructorUploadViewModelProvider, useConstructorUploadViewModelProvid
 import styles from './index.module.css';
 
 export const ConstructorUploadItem = observer(() => {
+  const navigate = useNavigate();
   const { viewWidth } = useAdaptivityWithJSMediaQueries();
-  const { t } = useTranslation(['constructor.upload_item', 'shared.zod', 'shared.db.schema.constructor_item']);
+  const { t } = useTranslation(['constructor.upload', 'shared.zod', 'shared.db.schema.constructor_item']);
 
   const model = useConstructorUploadViewModelProvider();
 
   const form = useForm<z.infer<typeof constructorsItemPutSchema>, ReturnType<typeof zodValidator>>({
     onSubmit: ({ value }) => model.upload(value),
-    defaultValues: {
-      title: '',
-      category: '',
-      description: '',
-      file: new Blob(),
-      variant: MinecraftTextureVariant.CLASSIC,
-    },
+    defaultValues: model.formValues,
     validatorAdapter: zodValidator(),
   });
-
   const isDirty = form.useStore((state) => state.isDirty);
   const variant = form.useStore((state) => state.values.variant);
 
+  const handleClose = () => {
+    model.resetFormValue();
+  };
+
   useBeforeUnload(isDirty, t('common:unsaved_changes'));
 
+  useEffect(
+    () => () => {
+      model.formValues = form.state.values;
+    },
+    [],
+  );
+
   return (
-    <ModalPage size="m" dynamicContentHeight>
+    <ModalPage size="m" dynamicContentHeight onClose={handleClose}>
       <CustomScrollView autoHideScrollbar>
-        <ModalPageHeader>{t('constructor.upload_item:header')}</ModalPageHeader>
+        <ModalPageHeader>{t('constructor.upload:header')}</ModalPageHeader>
         <form
           onSubmit={(event) => {
             event.preventDefault();
@@ -114,13 +122,12 @@ export const ConstructorUploadItem = observer(() => {
                         >
                           <Placeholder
                             header={
-                              (hasValidPreview && field.state.value?.name) ||
-                              t('constructor.upload_item:file_input_title')
+                              (hasValidPreview && field.state.value?.name) || t('constructor.upload:file_input_title')
                             }
                             stretched={viewWidth > ViewWidth.MOBILE}
                           >
                             <InnerHTML>
-                              {String(field.state.meta.errors) || t('constructor.upload_item:file_input_description')}
+                              {String(field.state.meta.errors) || t('constructor.upload:file_input_description')}
                             </InnerHTML>
                           </Placeholder>
                         </DragAndDropInput>
@@ -129,7 +136,7 @@ export const ConstructorUploadItem = observer(() => {
 
                         <form.Field name="variant">
                           {(field) => (
-                            <FormItem top={t('constructor.upload_item:variant_input_variant')} noPadding>
+                            <FormItem top={t('constructor.upload:variant_input_variant')} noPadding>
                               <SegmentedControl
                                 size="m"
                                 value={field.state.value}
@@ -158,7 +165,7 @@ export const ConstructorUploadItem = observer(() => {
           >
             {(field) => (
               <FormItem
-                top={t('constructor.upload_item:title_input_title')}
+                top={t('constructor.upload:title_input_title')}
                 bottom={String(field.state.meta.errors) || undefined}
                 status={field.state.meta.errors.length ? 'error' : 'default'}
                 required
@@ -180,7 +187,7 @@ export const ConstructorUploadItem = observer(() => {
             }}
           >
             {(field) => (
-              <FormItem top={t('constructor.upload_item:description_input_title')}>
+              <FormItem top={t('constructor.upload:description_input_title')}>
                 <Textarea
                   value={field.state.value}
                   maxLength={constructorsItemPutSchema.shape.description.maxLength!}
@@ -199,7 +206,7 @@ export const ConstructorUploadItem = observer(() => {
             >
               {(field) => (
                 <FormItem
-                  top={t('constructor.upload_item:category_input_title')}
+                  top={t('constructor.upload:category_input_title')}
                   status={field.state.meta.errors.length ? 'error' : 'default'}
                   required
                 >
@@ -209,12 +216,25 @@ export const ConstructorUploadItem = observer(() => {
                     options={model.categoriesOptions}
                     fetching={!model.hasCategoriesOptions}
                     renderOption={({ option: { label }, ...restProps }) => (
-                      <>
-                        <CustomSelectOption {...restProps}>{label}</CustomSelectOption>
-                      </>
+                      <CustomSelectOption {...restProps}>{label}</CustomSelectOption>
                     )}
                     forceDropdownPortal={false}
                     onChange={({ target: { value } }) => field.handleChange(value)}
+                    before={
+                      <Tappable
+                        hoverMode="opacity"
+                        activeMode="opacity"
+                        onClick={(event) => {
+                          event.stopPropagation();
+
+                          navigate({
+                            to: '/constructor/category_create',
+                          });
+                        }}
+                      >
+                        <Icon16Add />
+                      </Tappable>
+                    }
                     allowClearButton
                   />
                 </FormItem>
@@ -227,7 +247,7 @@ export const ConstructorUploadItem = observer(() => {
               <ModalFooter>
                 <ButtonGroup>
                   <Button type="submit" loading={isSubmitting} disabled={!canSubmit}>
-                    {t('constructor.upload_item:save')}
+                    {t('constructor.upload:save')}
                   </Button>
                 </ButtonGroup>
               </ModalFooter>

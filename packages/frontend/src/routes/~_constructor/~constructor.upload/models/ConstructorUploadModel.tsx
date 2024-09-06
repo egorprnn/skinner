@@ -1,7 +1,10 @@
+import { z } from 'zod';
 import { makeAutoObservable } from 'mobx';
 import type { InferRequestType } from 'hono';
 import { createProvider, scope } from '@skinner/di';
+import { MinecraftTextureVariant } from '@skinner/minecraft-auth';
 import type { CustomSelectOptionInterface } from '@vkontakte/vkui';
+import { constructorsItemPutSchema } from '@skinner/backend/schema/constructors/item';
 
 import { ConstructorService } from '../../models';
 import { SessionService } from '../../../../models';
@@ -12,8 +15,17 @@ type CategoriesOptions = Array<
   }
 >;
 
-@scope.transient()
+@scope.container()
 export class ConstructorUploadModel {
+  private static readonly DEFAULT_FORM_VALUES = {
+    title: '',
+    category: '',
+    description: '',
+    file: new Blob(),
+    variant: MinecraftTextureVariant.CLASSIC,
+  } as const;
+  private _formValues: z.infer<typeof constructorsItemPutSchema> = ConstructorUploadModel.DEFAULT_FORM_VALUES;
+
   constructor(
     private sessionService: SessionService,
     private constructorService: ConstructorService,
@@ -27,8 +39,20 @@ export class ConstructorUploadModel {
     });
   }
 
+  get formValues() {
+    return this._formValues;
+  }
+
+  set formValues(value) {
+    this._formValues = value;
+  }
+
+  resetFormValue() {
+    this._formValues = ConstructorUploadModel.DEFAULT_FORM_VALUES;
+  }
+
   get hasCategoriesOptions() {
-    return Boolean(this.constructorService.categories?.length);
+    return Array.isArray(this.constructorService.categories);
   }
 
   get categoriesOptions() {
