@@ -1,9 +1,20 @@
 import { LazyMotion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import type { PropsWithChildren } from 'react';
-import { createRootRoute, Outlet } from '@tanstack/react-router';
-import { AdaptivityProvider, AppRoot, ConfigProvider, PanelHeader, SplitCol, SplitLayout } from '@vkontakte/vkui';
+import { createRootRoute, Outlet, type ErrorComponentProps } from '@tanstack/react-router';
+import {
+  AdaptivityProvider,
+  AppRoot,
+  ConfigProvider,
+  Div,
+  Group,
+  PanelHeader,
+  Placeholder,
+  SplitCol,
+  SplitLayout,
+} from '@vkontakte/vkui';
 
-import { Sidebar } from './components';
+import { Panel, Sidebar } from './components';
 
 import { SessionProvider } from '../../models';
 
@@ -44,8 +55,31 @@ function RootSkeleton() {
   );
 }
 
+function RootError({ error }: ErrorComponentProps) {
+  const { t } = useTranslation();
+
+  // todo картинка
+  return (
+    <Root>
+      <Panel centered>
+        <Group>
+          <Div>
+            <Placeholder header={t('common:error_title')}>
+              {t('common:error_description')}
+              <br />
+              <br />
+              {String(error)}
+            </Placeholder>
+          </Div>
+        </Group>
+      </Panel>
+    </Root>
+  );
+}
+
 export const Route = createRootRoute({
   component: Root,
   wrapInSuspense: true,
+  errorComponent: RootError,
   pendingComponent: RootSkeleton,
 });
