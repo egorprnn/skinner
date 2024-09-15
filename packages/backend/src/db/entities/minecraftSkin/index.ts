@@ -1,10 +1,13 @@
 import * as Sentry from '@sentry/bun';
+import { z } from 'zod';
 import { instanceToPlain } from 'class-transformer';
 import { MinecraftTextureVariant } from '@skinner/minecraft-auth';
 import { AfterLoad, AfterUpdate, BeforeInsert, Column, Entity, ManyToMany, PrimaryColumn } from 'typeorm';
 
-import { User } from './user';
-import { S3 } from '../../modules';
+import { User } from '../user';
+import { S3 } from '../../../modules';
+
+import { minecraftSkinSchema } from './schema';
 
 @Entity()
 export class MinecraftSkin {
@@ -76,6 +79,6 @@ export class MinecraftSkin {
   }
 
   toJSON() {
-    return instanceToPlain(this);
+    return instanceToPlain(this) as z.infer<typeof minecraftSkinSchema>;
   }
 }

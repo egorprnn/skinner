@@ -1,9 +1,12 @@
+import { z } from 'zod';
 import { Exclude, instanceToPlain } from 'class-transformer';
 import { MinecraftAuth, MinecraftTextureState } from '@skinner/minecraft-auth';
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
 
-import { MinecraftSkin } from './minecraftSkin';
-import { MinecraftCape, ConstructorItem } from './';
+import { MinecraftSkin } from '../minecraftSkin';
+import { MinecraftCape, ConstructorItem } from '../';
+
+import { UserRole, userSchema } from './schema';
 
 @Entity()
 export class User {
@@ -17,15 +20,15 @@ export class User {
    * Minecraft UUID
    */
   @Column()
-  declare uuid?: string;
+  declare uuid: string;
 
   /**
    * Minecraft name
    */
   @Column({
-    length: 16,
+    length: userSchema.shape.name.maxLength!,
   })
-  declare name?: string;
+  declare name: string;
 
   /**
    * Minecraft access token
@@ -65,6 +68,20 @@ export class User {
 
   @OneToMany(() => ConstructorItem, (constructorItem) => constructorItem.owner)
   declare constructor_items: ConstructorItem[];
+
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: userSchema.shape.role._def.defaultValue(),
+  })
+  declare role: UserRole;
+
+  /**
+   * Last refresh token created at
+   */
+  @Column()
+  @Exclude()
+  declare refresh_token_created_at: number;
 
   /**
    * Sync Minecraft profile data
@@ -116,6 +133,6 @@ export class User {
   }
 
   toJSON() {
-    return instanceToPlain(this);
+    return instanceToPlain(this) as z.infer<typeof userSchema>;
   }
 }

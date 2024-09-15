@@ -24,7 +24,9 @@ await i18nextInitialization;
 import { dataSource } from './db';
 import { app, CommonErrorCode } from './hono';
 
-import authMicrosoft, { AuthMicrosoftErrorCode } from './routes/auth/microsoft';
+import auth, { AuthErrorCode } from './routes/auth';
+
+import user from './routes/user';
 
 import usersGet, { UsersGetErrorCode } from './routes/users/get';
 
@@ -34,7 +36,9 @@ import constructorsCategories from './routes/constructors/categories';
 
 const routes = app
   // Auth
-  .route('/auth/microsoft', authMicrosoft)
+  .route('/auth', auth)
+  // User
+  .route('/user', user)
   // Users
   .route('/users/get', usersGet)
   // Constructors
@@ -52,12 +56,14 @@ export default {
   fetch: app.fetch,
 };
 
-export type ErrorCode = CommonErrorCode | AuthMicrosoftErrorCode | UsersGetErrorCode;
+export type ErrorCode = CommonErrorCode | AuthErrorCode | UsersGetErrorCode;
 
 export * from './db';
 export * from './hono';
 
-export * from './routes/auth/microsoft';
+export * from './routes/auth';
+
+export * from './routes/user';
 
 export * from './routes/users/get';
 

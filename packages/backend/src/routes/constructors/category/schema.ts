@@ -1,4 +1,11 @@
+import { z } from 'zod';
+
 import { constructorCategorySchema } from '../../../db/entities/constructorCategory/schema';
+
+export const getConstructorCategoryIdMask = (parent?: z.infer<typeof constructorCategorySchema>['id']) =>
+  new RegExp(
+    `^(?:${parent ?? ''}(?:${parent ? '_' : ''}[a-z_]*)?){0,${constructorCategorySchema.shape.id.maxLength}}$`,
+  );
 
 export const constructorCategoryPostSchema = constructorCategorySchema
   .omit({
@@ -10,7 +17,7 @@ export const constructorCategoryPostSchema = constructorCategorySchema
   .refine(
     ({ id, parent }) => {
       if (parent) {
-        return id.startsWith(`${parent}_`);
+        return getConstructorCategoryIdMask(parent).test(id) && !id.endsWith('_');
       }
 
       return true;

@@ -1,9 +1,10 @@
 import { z } from 'zod';
 
-export const authMicrosoftPostSchema = z.object({
+export const authPostSchema = z.object({
   code: z
     .string({
       description: 'Microsoft OAuth code',
     })
-    .min(1),
+    .min(1)
+    .optional(),
 });

@@ -1,13 +1,16 @@
 import { Hono } from 'hono';
+
 import { cors } from 'hono/cors';
 import { sentry } from '@hono/sentry';
-import { HTTPException } from '@skinner/hono';
+import { jwt, HTTPException } from '@skinner/hono';
 import { IS_DEVELOPMENT_MODE, SITE_URL } from '@skinner/constants';
 
 export const enum CommonErrorCode {
   COMMON = 'common',
   INTERNAL = 'internal',
   UNKNOWN_METHOD = 'unknown_method',
+  VALIDATION_ERROR = 'validation_error',
+  INVALID_ACCESS_TOKEN = 'invalid_access_token',
 }
 
 export const app = new Hono();
@@ -19,6 +22,9 @@ app.use(
   }),
   cors({
     origin: [SITE_URL],
+  }),
+  jwt({
+    validate: false,
   }),
 );
 
