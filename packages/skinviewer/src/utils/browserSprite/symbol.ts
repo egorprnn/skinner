@@ -1,5 +1,6 @@
 export class BrowserSymbol {
   #node: Element;
+  #count = 0;
   #mounted = false;
 
   constructor(node: SVGSymbolElement) {
@@ -18,19 +19,31 @@ export class BrowserSymbol {
     return this.#node;
   }
 
-  mount(target: Node) {
+  get mounted() {
+    return this.#mounted;
+  }
+
+  mount(target?: Node) {
+    this.#count++;
+
     if (this.#mounted) {
       return this.#node;
     }
 
     this.#mounted = true;
 
-    target.appendChild(this.#node);
+    target?.appendChild(this.#node);
 
     return this.#node;
   }
 
   unmount() {
+    if (this.#count && --this.#count) {
+      return;
+    }
+
+    this.#mounted = false;
+
     this.#node.remove();
   }
 }

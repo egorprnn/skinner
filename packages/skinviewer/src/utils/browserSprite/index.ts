@@ -41,6 +41,10 @@ export class BrowserSprite {
     return this.#symbols.has(id);
   }
 
+  get(id: string) {
+    return this.#symbols.get(id);
+  }
+
   add(symbol: BrowserSymbol) {
     this.#symbols.set(symbol.id, symbol);
 
@@ -48,9 +52,17 @@ export class BrowserSprite {
   }
 
   delete(id: string) {
-    this.#symbols.get(id)?.unmount();
+    const symbol = this.#symbols.get(id);
 
-    this.#symbols.delete(id);
+    if (!symbol) {
+      return;
+    }
+
+    symbol.unmount();
+
+    if (!symbol.mounted) {
+      this.#symbols.delete(id);
+    }
   }
 }
 
