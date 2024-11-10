@@ -10,13 +10,23 @@ export class AvatarRenderer {
     new Worker(new URL('./index.worker.ts', import.meta.url), { type: 'module' }),
   );
 
-  static async render(url: string) {
+  static render(url: string) {
     const id = btoa(url);
 
-    if (this.#sprite.has(id)) {
-      return;
+    const browserSymbol = this.#sprite.get(id);
+
+    if (browserSymbol) {
+      browserSymbol.mount();
+
+      return this.unmount.bind(this, id);
     }
 
+    this.#createSymbol(id, url);
+
+    return this.unmount.bind(this, id);
+  }
+
+  static async #createSymbol(id: string, url: string) {
     const symbol = document.createElementNS('http://www.w3.org/2000/svg', 'symbol');
 
     symbol.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
@@ -47,5 +57,9 @@ export class AvatarRenderer {
 
       symbol.appendChild(rect);
     });
+  }
+
+  static unmount(id: string) {
+    this.#sprite.delete(id);
   }
 }

@@ -4,10 +4,10 @@ import { type Ref, type SVGProps, useEffect } from 'react';
 import { AvatarRenderer } from '../../utils';
 
 export interface MinecraftAvatarProps extends SVGProps<SVGSVGElement> {
+  getRootRef?: Ref<SVGSVGElement>;
   url: string;
   size?: number | string;
   title?: string;
-  getRootRef?: Ref<SVGSVGElement>;
 }
 
 export const MinecraftAvatar = ({
@@ -19,9 +19,7 @@ export const MinecraftAvatar = ({
   style,
   ...restProps
 }: MinecraftAvatarProps): JSX.Element => {
-  useEffect(() => {
-    AvatarRenderer.render(url);
-  }, []);
+  useEffect(() => AvatarRenderer.render(url), [url]);
 
   return (
     <svg
@@ -37,8 +35,7 @@ export const MinecraftAvatar = ({
       }}
       {...restProps}
     >
-      {title && <title>{title}</title>}
-      <use xlinkHref={`#${btoa(url)}`} />
+      <use xlinkHref={`#${btoa(url)}`}>{title && <title>{title}</title>}</use>
     </svg>
   );
 };
