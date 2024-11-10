@@ -6,7 +6,8 @@
     "eslint:fix": "yarn eslint:check --fix",
     "eslint:check": "yarn run eslint './packages/**/*.{ts,tsx}'",
     "prettier:fix": "yarn run prettier --write './packages/**/*.{ts,tsx,css}'",
-    "prettier:check": "yarn run prettier --check './packages/**/*.{ts,tsx,css}'"
+    "prettier:check": "yarn run prettier --check './packages/**/*.{ts,tsx,css}'",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@vkontakte/icons": "^2.136.0",
@@ -43,6 +44,7 @@
     "@vitejs/plugin-react-swc": "^3.7.0",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.2",
+    "patch-package": "^8.0.0",
     "prettier": "^3.3.2",
     "storybook": "^8.1.10",
     "swc-loader": "^0.2.6",
@@ -57,7 +59,6 @@
     "packages/backend",
     "packages/ui",
     "packages/minecraft-auth",
-    "packages/hono",
     "packages/constants",
     "packages/ui",
     "packages/skinviewer",
