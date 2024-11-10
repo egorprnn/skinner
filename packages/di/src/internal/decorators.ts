@@ -6,7 +6,7 @@ import {
   singleton as tsyringeSingleton,
 } from 'tsyringe';
 import { AbstractConstructor, AnyConstructor, Destroyable } from '../types';
-import { constructorWrapper, globalScopeRegistrations } from './interceptor';
+import { constructorWrapper, globalScopeRegistrations } from './construction-interceptor';
 import { Scope, scopes } from './scope';
 
 export interface ScopeOptions {

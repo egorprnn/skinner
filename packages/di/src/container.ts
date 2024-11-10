@@ -2,7 +2,7 @@
 import { container, DependencyContainer, Lifecycle } from 'tsyringe';
 import { mapScopeToTsyringeLifecycleType } from './internal/decorators';
 import { isDestroyable } from './internal/guards';
-import { globalScopeRegistrations } from './internal/interceptor';
+import { globalScopeRegistrations } from './internal/construction-interceptor';
 import { Scope, scopes } from './internal/scope';
 import { constructorScope } from './internal/symbols';
 import { destroy } from './symbols';
@@ -35,14 +35,10 @@ export class DIContainer {
   private readonly children: Map<string, DIContainer> = new Map();
   private readonly container: DependencyContainer;
 
-  private readonly instances: Map<Constructor<any>, Destroyable> = new Map();
+  private readonly instances: Map<Partial<Destroyable>, Array<Partial<Destroyable>>> = new Map();
 
   private readonly handleConstruction = (data: InterceptorData<any>) => {
-    const { type, ctor, instance } = data;
-
-    if (!isDestroyable(instance)) {
-      return;
-    }
+    const { type, instance, args } = data;
 
     const shouldSaveInCurrent =
       (type === scopes.GLOBAL && this.isIsolated) ||
@@ -51,7 +47,11 @@ export class DIContainer {
       !this.parent;
 
     if (shouldSaveInCurrent) {
-      this.instances.set(ctor, instance);
+      const transientArgs = args.filter((arg) => arg.constructor[constructorScope] === scopes.TRANSIENT);
+
+      if (transientArgs.length || isDestroyable(instance)) {
+        this.instances.set(instance, transientArgs);
+      }
     } else {
       this.parent?.handleConstruction(data);
     }
@@ -118,7 +118,7 @@ export class DIContainer {
   public isolate() {
     this.isIsolated = true;
 
-    Array.from(globalScopeRegistrations.values()).forEach((token) => this.container.registerSingleton(token));
+    globalScopeRegistrations.forEach((token) => this.container.registerSingleton(token));
   }
 
   /**
@@ -133,7 +133,7 @@ export class DIContainer {
       throw new Error('Cannot destroy root container!');
     }
 
-    Array.from(this.instances.keys()).forEach((Ctor) => this.destroyInstance(Ctor));
+    Array.from(this.instances.keys()).forEach((instance) => this.destroyInstance(instance));
 
     await this.container.dispose();
 
@@ -144,13 +144,19 @@ export class DIContainer {
   /**
    * Позволяет вызвать деструктор у конкретного инстанса
    * */
-  public destroyInstance(Ctor: Constructor<Partial<Destroyable>>) {
-    const instance = this.instances.get(Ctor);
+  public destroyInstance(instance: Partial<Destroyable>) {
+    if (!this.instances.has(instance)) {
+      return;
+    }
+
+    const deps = this.instances.get(instance);
 
     if (isDestroyable(instance)) {
       instance[destroy]();
-      this.instances.delete(Ctor);
     }
+
+    this.instances.delete(instance);
+    deps?.forEach((dep) => this.destroyInstance(dep));
   }
 
   /**

@@ -1,7 +1,12 @@
 import { Constructor } from '../types';
 import { Scope } from './scope';
 
-export type InterceptorData<T> = { instance: T; ctor: Constructor<T>; type: Scope };
+export type InterceptorData<T> = {
+  instance: T;
+  ctor: Constructor<T>;
+  args: ConstructorParameters<Constructor<T>>;
+  type: Scope;
+};
 
 export type ResolveInterceptorHandler<T> = (data: InterceptorData<T>) => void;
 

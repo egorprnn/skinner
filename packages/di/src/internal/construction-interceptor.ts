@@ -31,6 +31,7 @@ export const constructorWrapper = <T extends Constructor<any>>(
         type,
         instance,
         ctor: proxy,
+        args,
       });
 
       return instance;

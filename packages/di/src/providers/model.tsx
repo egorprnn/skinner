@@ -7,7 +7,7 @@ import { InferProps, ModelInstanceType } from './types';
 import { useContainer } from './container';
 import { useMemoizeProps, usePostponedEffect } from '../internal/utils';
 import { Props, propsAttribute } from './props';
-import { Constructor } from '../types';
+import { Constructor, Destroyable } from '../types';
 
 export const createProvider = <
   ModelClassType extends Constructor<ModelInstanceType<any>>,
@@ -34,6 +34,10 @@ export const createProvider = <
         }
       });
 
+      if (isInitable(res)) {
+        res[init](restProps);
+      }
+
       return res as ModelType;
     });
 
@@ -47,15 +51,12 @@ export const createProvider = <
       });
     }, useMemoizeProps(restProps));
 
-    useEffect(() => {
-      if (isInitable(instance)) {
-        instance[init](restProps);
-      }
-
-      return () => {
-        container.destroyInstance(ModelClass);
-      };
-    }, []);
+    useEffect(
+      () => () => {
+        container.destroyInstance(instance as Partial<Destroyable>);
+      },
+      [],
+    );
 
     return <ModelContext.Provider value={instance}>{children}</ModelContext.Provider>;
   };
