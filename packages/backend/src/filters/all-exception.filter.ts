@@ -1,14 +1,7 @@
 import * as Sentry from '@sentry/nestjs';
 import { HttpAdapterHost } from '@nestjs/core';
-import { Catch, HttpException, HttpStatus, type ExceptionFilter, type ArgumentsHost } from '@nestjs/common';
-
-export const enum CommonErrorCode {
-  COMMON = 'common',
-  INTERNAL = 'internal',
-  UNKNOWN_METHOD = 'unknown_method',
-  VALIDATION_ERROR = 'validation_error',
-  INVALID_ACCESS_TOKEN = 'invalid_access_token',
-}
+import { Catch, HttpException, type ExceptionFilter, type ArgumentsHost } from '@nestjs/common';
+import { AppInternalException } from '../error/app-internal.error';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -22,13 +15,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     if (!(exception instanceof HttpException)) {
       Sentry.captureException(exception);
 
-      exception = new HttpException(
-        {
-          code: CommonErrorCode.INTERNAL,
-          message: exception instanceof Error ? exception.message : exception,
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      exception = new AppInternalException(exception instanceof Error ? exception.message : exception);
     }
 
     httpAdapter.reply(

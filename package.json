@@ -66,6 +66,7 @@
     "packages/storybook",
     "packages/di",
     "packages/utils",
-    "packages/i18next"
+    "packages/i18next",
+    "packages/api-client"
   ]
 }

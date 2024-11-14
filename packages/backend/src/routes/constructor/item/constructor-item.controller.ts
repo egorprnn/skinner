@@ -1,3 +1,4 @@
+import { ApiConsumes } from '@nestjs/swagger';
 import { Body, Controller, Post } from '@nestjs/common';
 
 import { ConstructorItemService } from './constructor-item.service';
@@ -8,6 +9,7 @@ export class ConstructorItemController {
   constructor(private readonly constructorItemService: ConstructorItemService) {}
 
   @Post()
+  @ApiConsumes('multipart/form-data')
   create(@Body() constructorItemCreateDto: ConstructorItemCreateDto) {
     return this.constructorItemService.create(constructorItemCreateDto);
   }

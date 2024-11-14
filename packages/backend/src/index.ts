@@ -1,6 +1,9 @@
 import './instrument';
 
+import fs from 'fs/promises';
+import { patchNestJsSwagger } from 'nestjs-zod';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { HonoAdapter, type NestHonoApplication } from '@kiyasov/platform-hono';
 
 import { AppModule } from './app.module';
@@ -16,5 +19,13 @@ app.useGlobalFilters(
   new NotFoundExceptionFilter(),
   new ZodValidationExceptionFilter(),
 );
+
+patchNestJsSwagger();
+
+const config = new DocumentBuilder().setTitle('Skinner API').setVersion('1.0').build();
+
+const document = SwaggerModule.createDocument(app, config);
+
+fs.writeFile('./dist/schema.json', JSON.stringify(document));
 
 await app.listen(parseInt(process.env['PORT']!) || 3001);

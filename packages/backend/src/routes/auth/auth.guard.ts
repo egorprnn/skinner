@@ -1,18 +1,13 @@
 import type { HonoRequest } from 'hono';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
-import {
-  type CanActivate,
-  type ExecutionContext,
-  HttpStatus,
-  Injectable,
-  SetMetadata,
-  HttpException,
-} from '@nestjs/common';
+import { type CanActivate, type ExecutionContext, Injectable, SetMetadata } from '@nestjs/common';
 
 import { JWTTokenType } from './dto/auth.dto';
-import { CommonErrorCode } from '../../filters/all-exception.filter';
 import { AuthAccessTokenUserDto } from './dto/auth-access-token-user.dto';
+import { AuthRequiredAuthException } from './error/auth-required-auth.error';
+import { AuthInvalidTokenException } from './error/auth-invalid-token.error';
+import { AuthInvalidTokenTypeException } from './error/auth-invalid-token-type.error';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -41,13 +36,7 @@ export class AuthGuard implements CanActivate {
     const [, token] = request.header('Authorization')?.split(' ') ?? [];
 
     if (!token) {
-      throw new HttpException(
-        {
-          code: CommonErrorCode.INVALID_ACCESS_TOKEN,
-          message: 'This method required authorization',
-        },
-        HttpStatus.UNAUTHORIZED,
-      );
+      throw new AuthRequiredAuthException();
     }
 
     const allowedTokenType =
@@ -61,23 +50,11 @@ export class AuthGuard implements CanActivate {
         secret: process.env['JWT_SECRET']!,
       });
     } catch {
-      throw new HttpException(
-        {
-          code: CommonErrorCode.INVALID_ACCESS_TOKEN,
-          message: `Invalid ${allowedTokenType}`,
-        },
-        HttpStatus.UNAUTHORIZED,
-      );
+      throw new AuthInvalidTokenException(allowedTokenType);
     }
 
     if (request.user.typ !== allowedTokenType) {
-      throw new HttpException(
-        {
-          code: CommonErrorCode.INVALID_ACCESS_TOKEN,
-          message: `${request.user.typ} cannot be used for route with ${allowedTokenType} authorization`,
-        },
-        HttpStatus.UNAUTHORIZED,
-      );
+      throw new AuthInvalidTokenTypeException(request.user.typ, allowedTokenType);
     }
 
     return true;

@@ -1,16 +1,10 @@
-import { Catch, HttpStatus, HttpException, NotFoundException, type ExceptionFilter } from '@nestjs/common';
+import { Catch, NotFoundException, type ExceptionFilter } from '@nestjs/common';
 
-import { CommonErrorCode } from './all-exception.filter';
+import { AppUnknownMethodException } from '../error/app-unknown-method.error';
 
 @Catch(NotFoundException)
 export class NotFoundExceptionFilter implements ExceptionFilter {
   catch() {
-    throw new HttpException(
-      {
-        code: CommonErrorCode.UNKNOWN_METHOD,
-        message: 'Unknown method',
-      },
-      HttpStatus.NOT_FOUND,
-    );
+    throw new AppUnknownMethodException();
   }
 }
