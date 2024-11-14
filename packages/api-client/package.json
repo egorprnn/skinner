@@ -1,0 +1,15 @@
+{
+  "private": true,
+  "name": "@skinner/api-client",
+  "version": "1.0.0",
+  "main": "./src/index.ts",
+  "scripts": {
+    "build": "openapi-typescript ../backend/dist/schema.json -o ./src/schema.ts"
+  },
+  "dependencies": {
+    "openapi-typescript-fetch": "^2.0.0"
+  },
+  "devDependencies": {
+    "openapi-typescript": "^7.4.3"
+  }
+}
