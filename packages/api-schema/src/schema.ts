@@ -230,7 +230,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["AuthMicrosoftDto"][];
+                "application/json": components["schemas"]["AuthMicrosoftDto"];
             };
         };
         responses: {

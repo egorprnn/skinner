@@ -67,6 +67,6 @@
     "packages/di",
     "packages/utils",
     "packages/i18next",
-    "packages/api-client"
+    "packages/api-schema"
   ]
 }
