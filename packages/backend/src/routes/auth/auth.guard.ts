@@ -5,8 +5,8 @@ import { type CanActivate, type ExecutionContext, Injectable, SetMetadata } from
 
 import { JWTTokenType } from './dto/auth.dto';
 import { AuthAccessTokenUserDto } from './dto/auth-access-token-user.dto';
-import { AuthRequiredAuthException } from './error/auth-required-auth.error';
 import { AuthInvalidTokenException } from './error/auth-invalid-token.error';
+import { AuthRequiredAuthException } from './error/auth-required-auth.error';
 import { AuthInvalidTokenTypeException } from './error/auth-invalid-token-type.error';
 
 @Injectable()
@@ -49,7 +49,7 @@ export class AuthGuard implements CanActivate {
       request.user = await this.jwtService.verifyAsync<AuthAccessTokenUserDto>(token, {
         secret: process.env['JWT_SECRET']!,
       });
-    } catch {
+    } catch (error) {
       throw new AuthInvalidTokenException(allowedTokenType);
     }
 

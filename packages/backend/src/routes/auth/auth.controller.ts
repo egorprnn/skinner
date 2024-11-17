@@ -18,6 +18,8 @@ import { AuthInvalidCodeException } from './error/auth-invalid-code.error';
 import { AuthEmptyLoginUrlException } from './error/auth-empty-login-url.error';
 import { AuthEmptyMicrosoftAccountException } from './error/auth-empty-microsoft-account.error';
 
+import type { DeepNonNullable } from '../../types/deep-non-nullable';
+
 @Controller('auth')
 @ApiGlobalExceptions()
 export class AuthController {
@@ -49,7 +51,7 @@ export class AuthController {
   @ApiOperation({
     summary: 'Authenticates a user or creates a new one if they do not exist using the code received from Microsoft',
   })
-  @ApiBody({ type: [AuthMicrosoftDto] })
+  @ApiBody({ type: AuthMicrosoftDto })
   @ApiResponse({ status: 200, type: UserDto })
   @ApiException(() => [AuthInvalidCodeException, AuthEmptyMicrosoftAccountException])
   async microsoft(@Body() authMicrosoftDto: AuthMicrosoftDto, @Res({ passthrough: true }) context: Context) {
@@ -84,7 +86,24 @@ export class AuthController {
   @ApiOperation({
     summary: 'Refreshes the access token using the refresh token and returns the current user with a new set of tokens',
   })
-  @ApiResponse({ status: 200, type: UserDto })
+  @ApiResponse({
+    status: 200,
+    type: UserDto,
+    headers: {
+      'Access-Token': {
+        schema: {
+          type: 'string',
+        },
+        required: true,
+      },
+      'Refresh-Token': {
+        schema: {
+          type: 'string',
+        },
+        required: true,
+      },
+    },
+  })
   async refreshToken(@Res({ passthrough: true }) context: Context) {
     const { microsoft_id } = context.req.user!;
 

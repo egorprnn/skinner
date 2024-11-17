@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { createZodDto } from 'nestjs-zod';
 
 const ConstructorCategoryBaseSchema = z.object({
   id: z
@@ -12,3 +13,5 @@ const ConstructorCategoryBaseSchema = z.object({
 export const ConstructorCategorySchema = ConstructorCategoryBaseSchema.extend({
   children: z.array(ConstructorCategoryBaseSchema),
 });
+
+export class ConstructorCategoryDto extends createZodDto(ConstructorCategorySchema) {}

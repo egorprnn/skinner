@@ -1,7 +1,7 @@
 import { IsNull } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 
-import type { ConstructorCategoryService } from '../category/constructor-category.service';
+import { ConstructorCategoryService } from '../category/constructor-category.service';
 
 @Injectable()
 export class ConstructorCategoriesService {

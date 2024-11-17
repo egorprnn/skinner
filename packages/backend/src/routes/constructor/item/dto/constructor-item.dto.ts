@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { MinecraftTextureVariant } from '@skinner/minecraft-auth';
+import { createZodDto } from 'nestjs-zod';
 
 export const ConstructorItemSchema = z.object({
   id: z
@@ -24,3 +25,5 @@ export const ConstructorItemSchema = z.object({
     description: 'Variant',
   }),
 });
+
+export class ConstructorItemDto extends createZodDto(ConstructorItemSchema) {}

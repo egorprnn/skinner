@@ -8,6 +8,8 @@ import { User } from './user.entity';
 import { MinecraftSkin } from '../minecraft/skin/minecraft-skin.entity';
 import { MinecraftCape } from '../minecraft/cape/minecraft-cape.entity';
 
+import type { DeepNonNullable } from '../../types/deep-non-nullable';
+
 @Injectable()
 export class UserService {
   private static readonly MINECRAFT_AUTH = new MinecraftAuth();

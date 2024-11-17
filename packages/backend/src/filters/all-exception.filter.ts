@@ -18,12 +18,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
       exception = new AppInternalException(exception instanceof Error ? exception.message : exception);
     }
 
-    httpAdapter.reply(
-      context.getResponse(),
-      {
-        error: exception.getResponse(),
-      },
-      exception.getStatus(),
-    );
+    httpAdapter.reply(context.getResponse(), exception.getResponse(), exception.getStatus());
   }
 }

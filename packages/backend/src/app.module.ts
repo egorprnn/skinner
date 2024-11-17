@@ -7,6 +7,7 @@ import { ZodSerializerInterceptor, ZodValidationPipe } from 'nestjs-zod';
 
 import { ConstructorItemModule } from './routes/constructor/item/constructor-item.module';
 import { ConstructorCategoryModule } from './routes/constructor/category/constructor-category.module';
+import { ConstructorCategoriesModule } from './routes/constructor/categories/constructor-categories.module';
 import { MinecraftCapeModule } from './routes/minecraft/cape/minecraft-cape.module';
 import { MinecraftSkinModule } from './routes/minecraft/skin/minecraft-skin.module';
 import { UserModule } from './routes/user/user.module';
@@ -31,6 +32,7 @@ import { AuthModule } from './routes/auth/auth.module';
     }),
     AuthModule,
     UserModule,
+    ConstructorCategoriesModule,
     ConstructorCategoryModule,
     ConstructorItemModule,
     MinecraftCapeModule,
