@@ -26,6 +26,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "nestjs-zod": "^4.2.0",
+    "hono": "^4.6.10",
     "pg": "^8.13.1",
     "pg-hstore": "^2.3.4",
     "reflect-metadata": "^0.2.0",

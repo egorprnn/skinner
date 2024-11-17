@@ -4,11 +4,17 @@ import million from 'million/compiler';
 import env from 'vite-plugin-environment';
 import react from '@vitejs/plugin-react-swc';
 import typescript from '@rollup/plugin-typescript';
+// @ts-expect-error
+import hypothetical from 'rollup-plugin-hypothetical';
+// @ts-expect-error
+import postprocess from '@stadtlandnetz/rollup-plugin-postprocess';
 import { defineConfig } from 'vite';
 import { imagetools } from 'vite-imagetools';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import { TanStackRouterVite } from '@tanstack/router-vite-plugin';
+
+const external = ['nestjs-zod'];
 
 export default defineConfig(({ command }) => ({
   base: '/',
@@ -16,7 +22,7 @@ export default defineConfig(({ command }) => ({
     minify: true,
     sourcemap: command === 'build',
     rollupOptions: {
-      treeshake: 'smallest',
+      external,
       output: {
         manualChunks: (id) => {
           if (id.includes('@vkontakte')) {
@@ -86,6 +92,10 @@ export default defineConfig(({ command }) => ({
         noSlot: true,
       },
     }),
+    hypothetical({
+      allowFallthrough: true,
+      files: Object.fromEntries(external.map((module) => [module, ''])),
+    }),
     typescript(),
     react({
       tsDecorators: command !== 'build',
@@ -103,6 +113,7 @@ export default defineConfig(({ command }) => ({
         },
       ],
     }),
+    // postprocess([[/import[^;]*/, '']]),
     command === 'build' &&
       sentryVitePlugin({
         org: 'sknnr',
