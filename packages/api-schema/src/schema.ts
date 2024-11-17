@@ -39,6 +39,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/constructor-categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Returns all existing constructor categories */
+        get: operations["ConstructorCategoriesController_all"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/constructor-category": {
         parameters: {
             query?: never;
@@ -48,6 +65,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /** Creates new constructor category */
         post: operations["ConstructorCategoryController_create"];
         delete?: never;
         options?: never;
@@ -64,6 +82,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /** Creates new constructor item */
         post: operations["ConstructorItemController_create"];
         delete?: never;
         options?: never;
@@ -103,11 +122,27 @@ export interface components {
                 url: string;
             };
         };
+        ConstructorCategoriesDto: {
+            /** @description ID */
+            id: string;
+            children: {
+                /** @description ID */
+                id: string;
+            }[];
+        }[];
         ConstructorCategoryCreateDto: {
             /** @description ID */
             id: string;
             /** @description Parent category ID */
             parent?: string;
+        };
+        ConstructorCategoryDto: {
+            /** @description ID */
+            id: string;
+            children: {
+                /** @description ID */
+                id: string;
+            }[];
         };
         ConstructorItemCreateDto: {
             /** @description Title */
@@ -155,11 +190,10 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        /** @example {
-                         *       "code": "validation_error",
-                         *       "message": "example_field: Required, example_field: Input not instance of File"
-                         *     } */
-                        error: Record<string, never>;
+                        /** @example validation_error */
+                        error: string;
+                        /** @example example_field: Required, example_field: Input not instance of File */
+                        message: string;
                     };
                 };
             };
@@ -169,11 +203,10 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        /** @example {
-                         *       "code": "required_auth",
-                         *       "message": "This method required authorization"
-                         *     } */
-                        error: Record<string, never>;
+                        /** @example required_auth */
+                        error: string;
+                        /** @example This method required authorization */
+                        message: string;
                     };
                 };
             };
@@ -183,11 +216,10 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        /** @example {
-                         *       "code": "unknown_method",
-                         *       "message": "Unknown method"
-                         *     } */
-                        error: Record<string, never>;
+                        /** @example unknown_method */
+                        error: string;
+                        /** @example Unknown method */
+                        message: string;
                     };
                 };
             };
@@ -197,11 +229,10 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        /** @example {
-                         *       "code": "internal",
-                         *       "message": "Internal exception message"
-                         *     } */
-                        error: Record<string, never>;
+                        /** @example internal */
+                        error: string;
+                        /** @example Internal exception message */
+                        message: string;
                     };
                 };
             };
@@ -211,11 +242,10 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        /** @example {
-                         *       "code": "empty_login_url",
-                         *       "message": "Empty login url"
-                         *     } */
-                        error: Record<string, never>;
+                        /** @example empty_login_url */
+                        error: string;
+                        /** @example Empty login url */
+                        message: string;
                     };
                 };
             };
@@ -248,11 +278,10 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        /** @example {
-                         *       "code": "validation_error",
-                         *       "message": "example_field: Required, example_field: Input not instance of File"
-                         *     } */
-                        error: Record<string, never>;
+                        /** @example validation_error */
+                        error: string;
+                        /** @example example_field: Required, example_field: Input not instance of File */
+                        message: string;
                     };
                 };
             };
@@ -262,11 +291,10 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        /** @example {
-                         *       "code": "required_auth",
-                         *       "message": "This method required authorization"
-                         *     } */
-                        error: Record<string, never>;
+                        /** @example required_auth */
+                        error: string;
+                        /** @example This method required authorization */
+                        message: string;
                     };
                 };
             };
@@ -276,11 +304,10 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        /** @example {
-                         *       "code": "invalid_code",
-                         *       "message": "Invalid Microsoft authorization code"
-                         *     } */
-                        error: Record<string, never>;
+                        /** @example invalid_code */
+                        error: string;
+                        /** @example Invalid Microsoft authorization code */
+                        message: string;
                     };
                 };
             };
@@ -290,11 +317,10 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        /** @example {
-                         *       "code": "unknown_method",
-                         *       "message": "Unknown method"
-                         *     } */
-                        error: Record<string, never>;
+                        /** @example unknown_method */
+                        error: string;
+                        /** @example Unknown method */
+                        message: string;
                     };
                 };
             };
@@ -304,11 +330,10 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        /** @example {
-                         *       "code": "internal",
-                         *       "message": "Internal exception message"
-                         *     } */
-                        error: Record<string, never>;
+                        /** @example internal */
+                        error: string;
+                        /** @example Internal exception message */
+                        message: string;
                     };
                 };
             };
@@ -325,6 +350,8 @@ export interface operations {
         responses: {
             200: {
                 headers: {
+                    "Access-Token": string;
+                    "Refresh-Token": string;
                     [name: string]: unknown;
                 };
                 content: {
@@ -337,11 +364,10 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        /** @example {
-                         *       "code": "validation_error",
-                         *       "message": "example_field: Required, example_field: Input not instance of File"
-                         *     } */
-                        error: Record<string, never>;
+                        /** @example validation_error */
+                        error: string;
+                        /** @example example_field: Required, example_field: Input not instance of File */
+                        message: string;
                     };
                 };
             };
@@ -351,11 +377,10 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        /** @example {
-                         *       "code": "required_auth",
-                         *       "message": "This method required authorization"
-                         *     } */
-                        error: Record<string, never>;
+                        /** @example required_auth */
+                        error: string;
+                        /** @example This method required authorization */
+                        message: string;
                     };
                 };
             };
@@ -365,11 +390,10 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        /** @example {
-                         *       "code": "unknown_method",
-                         *       "message": "Unknown method"
-                         *     } */
-                        error: Record<string, never>;
+                        /** @example unknown_method */
+                        error: string;
+                        /** @example Unknown method */
+                        message: string;
                     };
                 };
             };
@@ -379,11 +403,81 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        /** @example {
-                         *       "code": "internal",
-                         *       "message": "Internal exception message"
-                         *     } */
-                        error: Record<string, never>;
+                        /** @example internal */
+                        error: string;
+                        /** @example Internal exception message */
+                        message: string;
+                    };
+                };
+            };
+        };
+    };
+    ConstructorCategoriesController_all: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConstructorCategoriesDto"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example validation_error */
+                        error: string;
+                        /** @example example_field: Required, example_field: Input not instance of File */
+                        message: string;
+                    };
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example required_auth */
+                        error: string;
+                        /** @example This method required authorization */
+                        message: string;
+                    };
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example unknown_method */
+                        error: string;
+                        /** @example Unknown method */
+                        message: string;
+                    };
+                };
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example internal */
+                        error: string;
+                        /** @example Internal exception message */
+                        message: string;
                     };
                 };
             };
@@ -402,11 +496,65 @@ export interface operations {
             };
         };
         responses: {
-            201: {
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["ConstructorCategoryDto"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example validation_error */
+                        error: string;
+                        /** @example example_field: Required, example_field: Input not instance of File */
+                        message: string;
+                    };
+                };
+            };
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example required_auth */
+                        error: string;
+                        /** @example This method required authorization */
+                        message: string;
+                    };
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example unknown_method */
+                        error: string;
+                        /** @example Unknown method */
+                        message: string;
+                    };
+                };
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example internal */
+                        error: string;
+                        /** @example Internal exception message */
+                        message: string;
+                    };
+                };
             };
         };
     };
@@ -423,11 +571,13 @@ export interface operations {
             };
         };
         responses: {
-            201: {
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["ConstructorCategoryDto"];
+                };
             };
         };
     };
