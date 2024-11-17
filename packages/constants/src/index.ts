@@ -1,4 +1,4 @@
-export const IS_DEVELOPMENT_MODE = process.env.NODE_ENV === 'development';
+export const IS_DEVELOPMENT_MODE = process.env['MODE'] === 'development' || process.env['NODE_ENV'] === 'development';
 
 export const SITE_URL =
   typeof location !== 'undefined'
