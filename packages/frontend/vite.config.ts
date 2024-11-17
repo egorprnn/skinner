@@ -16,6 +16,7 @@ export default defineConfig(({ command }) => ({
     minify: true,
     sourcemap: command === 'build',
     rollupOptions: {
+      treeshake: 'smallest',
       output: {
         manualChunks: (id) => {
           if (id.includes('@vkontakte')) {
