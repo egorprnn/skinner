@@ -14,13 +14,13 @@ import {
   SplitLayout,
 } from '@vkontakte/vkui';
 
-import { Panel, Sidebar } from './components';
+import { Panel, Sidebar } from './__root/components';
 
-import { SessionProvider } from '../../models';
+import { SessionProvider } from '../models';
 
-import { loadFramerMotionFeatures } from './framerMotion';
+import { loadFramerMotionFeatures } from './__root/framerMotion';
 
-import styles from './index.module.css';
+import styles from './__root/index.module.css';
 
 import '@skinner/ui/themes/vkBaseDark.css';
 

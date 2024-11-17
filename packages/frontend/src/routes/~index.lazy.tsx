@@ -1,6 +1,6 @@
 import { createLazyFileRoute } from '@tanstack/react-router';
 
-import { Panel } from './~__root/components';
+import { Panel } from './__root/components';
 
 const Index = () => <Panel>test</Panel>;
 

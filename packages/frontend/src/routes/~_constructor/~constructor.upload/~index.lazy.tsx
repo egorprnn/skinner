@@ -9,28 +9,28 @@ import { zodValidator } from '@tanstack/zod-form-adapter';
 import { createLazyFileRoute, useNavigate } from '@tanstack/react-router';
 import { MinecraftTextureVariant } from '@skinner/minecraft-auth';
 import { InnerHTML, ModalFooter, DragAndDropInput } from '@skinner/ui';
-import { constructorsItemPutSchema } from '@skinner/backend/schema/constructors/item';
+import { ConstructorItemCreateSchema } from '@skinner/backend/src/routes/constructor/item/dto/constructor-item-create.dto';
 import {
   Flex,
   Input,
   Button,
   Spacing,
+  Tappable,
   Textarea,
   FormItem,
   ViewWidth,
   ButtonGroup,
   Placeholder,
+  CustomSelect,
   ModalPageHeader,
+  FormLayoutGroup,
   SegmentedControl,
   CustomScrollView,
-  useAdaptivityWithJSMediaQueries,
-  CustomSelect,
-  FormLayoutGroup,
   CustomSelectOption,
-  Tappable,
+  useAdaptivityWithJSMediaQueries,
 } from '@vkontakte/vkui';
 
-import { ModalPage } from '../../~__root/components';
+import { ModalPage } from '../../__root/components';
 
 import { ConstructorUploadViewModelProvider, useConstructorUploadViewModelProvider } from './models';
 
@@ -43,7 +43,7 @@ export const ConstructorUploadItem = observer(() => {
 
   const model = useConstructorUploadViewModelProvider();
 
-  const form = useForm<z.infer<typeof constructorsItemPutSchema>, ReturnType<typeof zodValidator>>({
+  const form = useForm<z.infer<typeof ConstructorItemCreateSchema>, ReturnType<typeof zodValidator>>({
     onSubmit: ({ value }) => model.upload(value),
     defaultValues: model.formValues,
     validatorAdapter: zodValidator(),
@@ -75,7 +75,7 @@ export const ConstructorUploadItem = observer(() => {
           <form.Field
             name="file"
             validators={{
-              onChangeAsync: constructorsItemPutSchema.shape.file,
+              onChangeAsync: ConstructorItemCreateSchema._def.schema.shape.file,
             }}
           >
             {(field) => {
@@ -155,7 +155,7 @@ export const ConstructorUploadItem = observer(() => {
           <form.Field
             name="title"
             validators={{
-              onChange: constructorsItemPutSchema.shape.title,
+              onChange: ConstructorItemCreateSchema._def.schema.shape.title,
             }}
           >
             {(field) => (
@@ -167,8 +167,8 @@ export const ConstructorUploadItem = observer(() => {
               >
                 <Input
                   value={field.state.value}
-                  minLength={constructorsItemPutSchema.shape.title.minLength!}
-                  maxLength={constructorsItemPutSchema.shape.title.maxLength!}
+                  minLength={ConstructorItemCreateSchema._def.schema.shape.title.minLength!}
+                  maxLength={ConstructorItemCreateSchema._def.schema.shape.title.maxLength!}
                   onChange={({ target: { value } }) => field.handleChange(value)}
                 />
               </FormItem>
@@ -178,14 +178,14 @@ export const ConstructorUploadItem = observer(() => {
           <form.Field
             name="description"
             validators={{
-              onChange: constructorsItemPutSchema.shape.description,
+              onChange: ConstructorItemCreateSchema._def.schema.shape.description,
             }}
           >
             {(field) => (
               <FormItem top={t('constructor.upload:description_input_title')}>
                 <Textarea
                   value={field.state.value}
-                  maxLength={constructorsItemPutSchema.shape.description.maxLength!}
+                  maxLength={ConstructorItemCreateSchema._def.schema.shape.description.maxLength!}
                   onChange={({ target: { value } }) => field.handleChange(value)}
                 />
               </FormItem>
@@ -196,7 +196,7 @@ export const ConstructorUploadItem = observer(() => {
             <form.Field
               name="category"
               validators={{
-                onChange: constructorsItemPutSchema.shape.category,
+                onChange: ConstructorItemCreateSchema._def.schema.shape.category,
               }}
             >
               {(field) => (

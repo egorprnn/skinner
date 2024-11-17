@@ -1,4 +1,4 @@
-import type { InferResponseType } from 'hono';
+import type { APISchemas } from '@skinner/api-schema';
 import { makeAutoObservable, runInAction } from 'mobx';
 import { createProvider, destroy, init, scope } from '@skinner/di';
 
@@ -6,7 +6,7 @@ import { SessionService } from '../../../models';
 
 @scope.container()
 export class ConstructorService {
-  _categories?: InferResponseType<typeof this.sessionService.api.constructors.categories.$get>;
+  _categories?: APISchemas['ConstructorCategoriesDto'];
   _fetchCategoriesAbortController?: AbortController;
 
   _activeCategoryIndex = 0;
@@ -68,22 +68,18 @@ export class ConstructorService {
 
     this._fetchCategoriesAbortController = new AbortController();
 
-    const categories = await this.sessionService.api.constructors.categories
-      .$get(undefined, {
-        init: {
-          signal: this._fetchCategoriesAbortController.signal,
-        },
-      })
-      .then((response) => response.json())
-      .catch(() => null);
+    const { data: categories, error } = await this.sessionService.api.GET('/constructor-categories', {
+      signal: this._fetchCategoriesAbortController.signal,
+    });
 
-    if (!categories) {
+    if (error) {
+      // todo
+      console.log(error);
+
       return;
     }
 
-    if (categories.error) {
-      console.log(categories.error);
-
+    if (!categories) {
       return;
     }
 

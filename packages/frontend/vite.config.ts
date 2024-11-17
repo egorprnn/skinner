@@ -1,6 +1,7 @@
 import path from 'path';
 import svgr from 'vite-plugin-svgr';
 import million from 'million/compiler';
+import env from 'vite-plugin-environment';
 import react from '@vitejs/plugin-react-swc';
 import typescript from '@rollup/plugin-typescript';
 import { defineConfig } from 'vite';
@@ -13,7 +14,7 @@ export default defineConfig(({ command }) => ({
   base: '/',
   build: {
     minify: true,
-    sourcemap: true,
+    sourcemap: command === 'build',
     rollupOptions: {
       output: {
         manualChunks: (id) => {
@@ -60,6 +61,12 @@ export default defineConfig(({ command }) => ({
     target: 'chrome84',
     legalComments: 'none',
   },
+  optimizeDeps: {
+    force: true,
+  },
+  resolve: {
+    alias: [{ find: /^@vkontakte\/vkui$/, replacement: '@vkontakte/vkui/dist/cssm' }],
+  },
   server: {
     host: true,
     port: 3000,
@@ -68,12 +75,6 @@ export default defineConfig(({ command }) => ({
       protocol: 'ws',
       clientPort: 3000,
     },
-  },
-  optimizeDeps: {
-    force: true,
-  },
-  resolve: {
-    alias: [{ find: /^@vkontakte\/vkui$/, replacement: '@vkontakte/vkui/dist/cssm' }],
   },
   plugins: [
     svgr(),
@@ -88,6 +89,7 @@ export default defineConfig(({ command }) => ({
     react({
       tsDecorators: command !== 'build',
     }),
+    env(['NODE_ENV']),
     TanStackRouterVite({
       routeFilePrefix: '~',
     }),

@@ -1,4 +1,5 @@
 import 'hono/client';
+
 import type { ErrorCode } from '@skinner/backend';
 
 type BlankRecordToNever<T> = T extends any ? (keyof T extends never ? never : T) : never;

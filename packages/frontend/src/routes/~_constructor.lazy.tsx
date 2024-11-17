@@ -5,7 +5,7 @@ import { Flex, Group } from '@vkontakte/vkui';
 import { SkinViewerLazy } from '@skinner/skinviewer';
 import { createLazyFileRoute, Outlet } from '@tanstack/react-router';
 
-import { Panel } from './~__root/components';
+import { Panel } from './__root/components';
 import { Sections } from './~_constructor/components';
 
 import { useSession } from '../models';

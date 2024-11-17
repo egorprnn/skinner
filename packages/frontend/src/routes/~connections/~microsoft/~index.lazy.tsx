@@ -7,11 +7,11 @@ import { createLazyFileRoute } from '@tanstack/react-router';
 
 import { useSession } from '../../../models';
 
-import { Panel } from '../../~__root/components';
+import { Panel } from '../../__root/components';
 
 const ConnectionsMicrosoft = observer(() => {
   const session = useSession();
-  const { t } = useTranslation('connections_microsoft');
+  const { t } = useTranslation('connections.microsoft');
 
   useEffect(() => {
     session.handleMicrosoftCode();
@@ -31,8 +31,8 @@ const ConnectionsMicrosoft = observer(() => {
         >
           {session.isLoginError && (
             <Group>
-              <Placeholder header={t('connections_microsoft:error_title')}>
-                {t(`connections_microsoft:error_${session.isLoginError}`) || t(`connections_microsoft:error_unknown`)}
+              <Placeholder header={t('connections.microsoft:error_title')}>
+                {t(`connections.microsoft:error_${session.isLoginError}`) || t(`connections.microsoft:error_unknown`)}
               </Placeholder>
             </Group>
           )}

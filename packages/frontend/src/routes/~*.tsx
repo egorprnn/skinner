@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { createFileRoute } from '@tanstack/react-router';
 import { Button, Div, Group, Placeholder } from '@vkontakte/vkui';
 
-import { Panel } from './~__root/components';
+import { Panel } from './__root/components';
 
 import image404 from '../../assets/404.png?format=webp';
 

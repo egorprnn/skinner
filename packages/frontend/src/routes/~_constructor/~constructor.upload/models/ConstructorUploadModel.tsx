@@ -1,10 +1,11 @@
 import { z } from 'zod';
 import { makeAutoObservable } from 'mobx';
-import type { InferRequestType } from 'hono';
+import { serialize } from 'object-to-formdata';
 import { createProvider, scope } from '@skinner/di';
+import type { APISchemas } from '@skinner/api-schema';
 import { MinecraftTextureVariant } from '@skinner/minecraft-auth';
 import type { CustomSelectOptionInterface } from '@vkontakte/vkui';
-import { constructorsItemPutSchema } from '@skinner/backend/schema/constructors/item';
+import { ConstructorItemCreateSchema } from '@skinner/backend/src/routes/constructor/item/dto/constructor-item-create.dto';
 
 import { ConstructorService } from '../../models';
 import { SessionService } from '../../../../models';
@@ -21,10 +22,10 @@ export class ConstructorUploadModel {
     title: '',
     category: '',
     description: '',
-    file: new Blob(),
+    file: new File([], ''),
     variant: MinecraftTextureVariant.CLASSIC,
   } as const;
-  private static _formValues: z.infer<typeof constructorsItemPutSchema> = ConstructorUploadModel.DEFAULT_FORM_VALUES;
+  private static _formValues: z.infer<typeof ConstructorItemCreateSchema> = ConstructorUploadModel.DEFAULT_FORM_VALUES;
 
   constructor(
     private sessionService: SessionService,
@@ -33,9 +34,10 @@ export class ConstructorUploadModel {
     makeAutoObservable(this);
   }
 
-  upload(data: InferRequestType<typeof this.sessionService.api.constructors.item.$put>['form']) {
-    this.sessionService.api.constructors.item.$put({
-      form: data,
+  upload(data: APISchemas['ConstructorItemCreateDto']) {
+    this.sessionService.api.POST('/constructor-item', {
+      body: data,
+      bodySerializer: serialize,
     });
   }
 
