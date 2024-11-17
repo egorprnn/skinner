@@ -19,10 +19,10 @@ declare module 'hono' {
   }
 }
 
-const app = await NestFactory.create<NestHonoApplication>(AppModule, new HonoAdapter());
-
-app.enableCors({
-  origin: [SITE_URL],
+const app = await NestFactory.create<NestHonoApplication>(AppModule, new HonoAdapter(), {
+  cors: {
+    origin: [SITE_URL],
+  },
 });
 
 const httpAdapter = app.get(HttpAdapterHost);
