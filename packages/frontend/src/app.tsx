@@ -1,4 +1,5 @@
 import * as Sentry from '@sentry/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { API_URL, IS_DEVELOPMENT_MODE } from '@skinner/constants';
 
 Sentry.init({
@@ -32,6 +33,7 @@ root.render(
   <DIProvider instance={rootContainer}>
     <I18nextProvider i18n={i18next}>
       <RouterProvider router={router} />
+      <SpeedInsights />
     </I18nextProvider>
   </DIProvider>,
 );
