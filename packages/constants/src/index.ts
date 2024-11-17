@@ -1,6 +1,4 @@
-import { env } from './utils';
-
-export const IS_DEVELOPMENT_MODE = env['MODE'] === 'development';
+export const IS_DEVELOPMENT_MODE = process.env.NODE_ENV === 'development';
 
 export const SITE_URL =
   typeof location !== 'undefined'
