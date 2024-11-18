@@ -14,7 +14,6 @@
     "@vkontakte/vkjs": "^0.32.4",
     "@vkontakte/vkui": "^6.7.4",
     "@vkontakte/vkui-tokens": "^4.55.0",
-    "axios": "^1.6.7",
     "i18next": "^23.11.5",
     "i18next-browser-languagedetector": "^7.2.1",
     "i18next-resources-to-backend": "^1.2.1",

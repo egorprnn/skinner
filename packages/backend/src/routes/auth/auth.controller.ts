@@ -9,10 +9,10 @@ import { ApiGlobalExceptions } from '../../decorators/api-global-exceptions.deco
 
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
-import { JWTTokenType } from './dto/auth.dto';
 import { UserDto } from '../user/dto/user.dto';
 import { AuthUrlDto } from './dto/auth-url.dto';
 import { UserService } from '../user/user.service';
+import { JWTTokenType } from './schema/auth.schema';
 import { AuthMicrosoftDto } from './dto/auth-microsoft.dto';
 import { AuthInvalidCodeException } from './error/auth-invalid-code.error';
 import { AuthEmptyLoginUrlException } from './error/auth-empty-login-url.error';

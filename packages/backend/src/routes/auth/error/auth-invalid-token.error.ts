@@ -1,11 +1,9 @@
 import { UnauthorizedException } from '@nestjs/common';
 
-import type { JWTTokenType } from '../dto/auth.dto';
+import type { JWTTokenType } from '../schema/auth.schema';
 
 export class AuthInvalidTokenException extends UnauthorizedException {
-  static readonly CODE = 'invalid_token';
-
   constructor(tokenType: JWTTokenType) {
-    super({ error: AuthInvalidTokenException.CODE, message: `Invalid ${tokenType}` });
+    super({ error: 'invalid_token', message: `Invalid ${tokenType}` });
   }
 }

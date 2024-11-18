@@ -4,7 +4,6 @@ import { makeAutoObservable, runInAction } from 'mobx';
 import { createProvider, init, scope } from '@skinner/di';
 import { type APIPaths, type APISchemas } from '@skinner/api-schema';
 import { createSyncStore, SyncAtomType } from '@skinner/browser-store';
-import { AuthInvalidTokenException } from '@skinner/backend/src/routes/auth/error/auth-invalid-token.error';
 
 import { router } from '../router';
 
@@ -39,10 +38,10 @@ export class SessionService {
 
       const response = await fetch(request.clone());
 
-      const data = await response.json();
+      const data = await response.clone().json();
       const { error } = data;
 
-      if (error === AuthInvalidTokenException.CODE && this._refreshToken) {
+      if (error === 'invalid_token' && this._refreshToken) {
         if (!this._refreshTokenPromise) {
           this._refreshTokenPromise = this._auth();
         }
@@ -57,12 +56,10 @@ export class SessionService {
           return fetch(request);
         }
 
-        if (this._isLoginError === AuthInvalidTokenException.CODE) {
+        if (this._isLoginError === 'invalid_token') {
           this.logout();
         }
       }
-
-      response.json = () => Promise.resolve(data);
 
       return response;
     },
@@ -170,7 +167,6 @@ export class SessionService {
   }
 
   private async _auth(authMicrosoftDto?: APISchemas['AuthMicrosoftDto']) {
-    console.log(this._isLoginStarted);
     if (this._isLoginStarted) {
       return;
     }

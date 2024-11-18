@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { Exclude, instanceToPlain } from 'class-transformer';
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
 
-import { UserRole, UserSchema } from './dto/user.dto';
+import { UserRole, UserSchema } from './schema/user.schema';
 
 import { MinecraftSkin } from '../minecraft/skin/minecraft-skin.entity';
 import { MinecraftCape } from '../minecraft/cape/minecraft-cape.entity';

@@ -10,9 +10,9 @@ import { createLazyFileRoute } from '@tanstack/react-router';
 import { maskitoPrefixPostprocessorGenerator } from '@maskito/kit';
 import { Button, ButtonGroup, CustomSelect, FormItem, Input, ModalPageHeader } from '@vkontakte/vkui';
 import {
-  getConstructorCategoryIdMask,
   ConstructorCategoryCreateSchema,
-} from '@skinner/backend/src/routes/constructor/category/dto/constructor-category-create.dto';
+  getConstructorCategoryIdMask,
+} from '@skinner/backend/src/routes/constructor/category/schema/constructor-category-create.schema';
 
 import { ModalPage } from '../../__root/components';
 

@@ -1,8 +1,5 @@
-import { z } from 'zod';
-import { MinecraftTextureVariant } from '@skinner/minecraft-auth';
+import { createZodDto } from 'nestjs-zod';
 
-export const MinecraftSkinSchema = z.object({
-  id: z.string(),
-  variant: z.nativeEnum(MinecraftTextureVariant),
-  url: z.string(),
-});
+import { MinecraftSkinSchema } from '../schema/minecraft-skin.schema';
+
+export class MinecraftSkinDto extends createZodDto(MinecraftSkinSchema) {}

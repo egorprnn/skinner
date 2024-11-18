@@ -1,6 +1,6 @@
 import { ApiException } from './api-exception.decorator';
 
-import { JWTTokenType } from '../routes/auth/dto/auth.dto';
+import { JWTTokenType } from '../routes/auth/schema/auth.schema';
 import { AppInternalException } from '../error/app-internal.error';
 import { AppValidationException } from '../error/app-validation.error';
 import { AppUnknownMethodException } from '../error/app-unknown-method.error';

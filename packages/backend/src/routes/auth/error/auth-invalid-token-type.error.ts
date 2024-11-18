@@ -1,6 +1,6 @@
 import { UnauthorizedException } from '@nestjs/common';
 
-import type { JWTTokenType } from '../dto/auth.dto';
+import type { JWTTokenType } from '../schema/auth.schema';
 
 export class AuthInvalidTokenTypeException extends UnauthorizedException {
   constructor(tokenType: JWTTokenType, allowedTokenType: JWTTokenType) {

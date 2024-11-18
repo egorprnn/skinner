@@ -1,12 +1,5 @@
-import { z } from 'zod';
 import { createZodDto } from 'nestjs-zod';
 
-export const AuthMicrosoftSchema = z.object({
-  code: z
-    .string({
-      description: 'Microsoft OAuth code',
-    })
-    .min(1),
-});
+import { AuthMicrosoftSchema } from '../schema/auth-microsoft.schema';
 
 export class AuthMicrosoftDto extends createZodDto(AuthMicrosoftSchema) {}

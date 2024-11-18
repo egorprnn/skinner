@@ -5,8 +5,8 @@ import { ConfidentialClientApplication, ProtocolMode } from '@azure/msal-node';
 import { MICROSOFT_CLIENT_ID, MICROSOFT_REDIRECT_URL, MICROSOFT_SCOPES } from '@skinner/constants';
 
 import { User } from '../user/user.entity';
-import { JWTTokenType } from './dto/auth.dto';
 import { UserService } from '../user/user.service';
+import { JWTTokenType } from './schema/auth.schema';
 import { AuthMicrosoftDto } from './dto/auth-microsoft.dto';
 
 @Injectable()

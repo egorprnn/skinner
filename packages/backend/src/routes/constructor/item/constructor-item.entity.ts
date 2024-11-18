@@ -6,7 +6,7 @@ import { AfterLoad, AfterUpdate, Column, Entity, ManyToOne, PrimaryColumn } from
 import { S3 } from '../../../modules';
 
 import { User } from '../../user/user.entity';
-import { ConstructorItemSchema } from './dto/constructor-item.dto';
+import { ConstructorItemSchema } from './schema/constructor-item.schema';
 import { ConstructorCategory } from '../category/constructor-category.entity';
 
 @Entity()

@@ -3,7 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { type CanActivate, type ExecutionContext, Injectable, SetMetadata } from '@nestjs/common';
 
-import { JWTTokenType } from './dto/auth.dto';
+import { JWTTokenType } from './schema/auth.schema';
 import { AuthAccessTokenUserDto } from './dto/auth-access-token-user.dto';
 import { AuthInvalidTokenException } from './error/auth-invalid-token.error';
 import { AuthRequiredAuthException } from './error/auth-required-auth.error';

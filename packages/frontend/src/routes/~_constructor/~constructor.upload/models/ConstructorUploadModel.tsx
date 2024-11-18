@@ -5,7 +5,7 @@ import { createProvider, scope } from '@skinner/di';
 import type { APISchemas } from '@skinner/api-schema';
 import { MinecraftTextureVariant } from '@skinner/minecraft-auth';
 import type { CustomSelectOptionInterface } from '@vkontakte/vkui';
-import { ConstructorItemCreateSchema } from '@skinner/backend/src/routes/constructor/item/dto/constructor-item-create.dto';
+import type { ConstructorItemCreateSchema } from '@skinner/backend/src/routes/constructor/item/schema/constructor-item-create.schema';
 
 import { ConstructorService } from '../../models';
 import { SessionService } from '../../../../models';

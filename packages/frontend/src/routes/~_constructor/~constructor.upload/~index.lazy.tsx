@@ -9,7 +9,6 @@ import { zodValidator } from '@tanstack/zod-form-adapter';
 import { createLazyFileRoute, useNavigate } from '@tanstack/react-router';
 import { MinecraftTextureVariant } from '@skinner/minecraft-auth';
 import { InnerHTML, ModalFooter, DragAndDropInput } from '@skinner/ui';
-import { ConstructorItemCreateSchema } from '@skinner/backend/src/routes/constructor/item/dto/constructor-item-create.dto';
 import {
   Flex,
   Input,
@@ -29,6 +28,7 @@ import {
   CustomSelectOption,
   useAdaptivityWithJSMediaQueries,
 } from '@vkontakte/vkui';
+import { ConstructorItemCreateSchema } from '@skinner/backend/src/routes/constructor/item/schema/constructor-item-create.schema';
 
 import { ModalPage } from '../../__root/components';
 

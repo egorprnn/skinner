@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 import type {
   MinecraftAuthResponse,
   MinecraftRawProfileResponse,
@@ -22,18 +20,17 @@ export class MinecraftAuth {
       securityToken,
     });
 
-    return axios
-      .get<MinecraftRawProfileResponse>(MINECRAFT_PROFILE_ENDPOINT, {
-        headers: {
-          authorization: `Bearer ${minecraftAccessToken}`,
-        },
-      })
-      .then(({ data }) => data);
+    return fetch(MINECRAFT_PROFILE_ENDPOINT, {
+      headers: {
+        Authorization: `Bearer ${minecraftAccessToken}`,
+      },
+    }).then((response) => response.json() as Promise<MinecraftRawProfileResponse>);
   }
 
   #getXboxLiveAccessData(microsoftAccessToken: string): Promise<XboxLiveAccessData> {
-    return axios
-      .post<XboxLiveAuthResponse>(XBOX_LIVE_AUTH_ENDPOINT, {
+    return fetch(XBOX_LIVE_AUTH_ENDPOINT, {
+      method: 'POST',
+      body: JSON.stringify({
         Properties: {
           AuthMethod: 'RPS',
           SiteName: 'user.auth.xboxlive.com',
@@ -41,14 +38,14 @@ export class MinecraftAuth {
         },
         RelyingParty: 'http://auth.xboxlive.com',
         TokenType: 'JWT',
-      })
+      }),
+    })
+      .then((response) => response.json() as Promise<XboxLiveAuthResponse>)
       .then(
         ({
-          data: {
-            Token,
-            DisplayClaims: {
-              xui: [{ uhs }],
-            },
+          Token,
+          DisplayClaims: {
+            xui: [{ uhs }],
           },
         }) => ({
           accessToken: Token,
@@ -58,16 +55,19 @@ export class MinecraftAuth {
   }
 
   #getXboxLiveSecurityToken(xboxLiveAccessToken: string): Promise<XboxLiveSecurityData> {
-    return axios
-      .post<XboxLiveAuthResponse>(XBOX_LIVE_SECURITY_AUTH_ENDPOINT, {
+    return fetch(XBOX_LIVE_SECURITY_AUTH_ENDPOINT, {
+      method: 'POST',
+      body: JSON.stringify({
         Properties: {
           SandboxId: 'RETAIL',
           UserTokens: [xboxLiveAccessToken],
         },
         RelyingParty: 'rp://api.minecraftservices.com/',
         TokenType: 'JWT',
-      })
-      .then(({ data: { Token } }) => ({
+      }),
+    })
+      .then((response) => response.json() as Promise<XboxLiveAuthResponse>)
+      .then(({ Token }) => ({
         securityToken: Token,
       }));
   }
@@ -77,11 +77,14 @@ export class MinecraftAuth {
     securityToken,
   }: Pick<XboxLiveAccessData, 'userHash'> &
     Pick<XboxLiveSecurityData, 'securityToken'>): Promise<MinecraftAuthResponse> {
-    return axios
-      .post<MinecraftAuthResponse>(MINECRAFT_AUTH_ENDPOINT, {
+    return fetch(MINECRAFT_AUTH_ENDPOINT, {
+      method: 'POST',
+      body: JSON.stringify({
         identityToken: `XBL3.0 x=${userHash};${securityToken}`,
-      })
-      .then(({ data }) => {
+      }),
+    })
+      .then((response) => response.json() as Promise<MinecraftAuthResponse>)
+      .then((data) => {
         const { expires_in } = data;
 
         data.expires_in = Date.now() + expires_in;

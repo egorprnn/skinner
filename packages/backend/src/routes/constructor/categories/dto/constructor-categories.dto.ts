@@ -1,8 +1,5 @@
-import { z } from 'zod';
-
-import { ConstructorCategorySchema } from '../../category/dto/constructor-category.dto';
 import { createZodDto } from 'nestjs-zod';
 
-const ConstructorCategoriesSchema = z.array(ConstructorCategorySchema);
+import { ConstructorCategoriesSchema } from '../schema/constructor-categories.schema';
 
 export class ConstructorCategoriesDto extends createZodDto(ConstructorCategoriesSchema) {}
