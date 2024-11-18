@@ -8,7 +8,6 @@ import { defineConfig } from 'vite';
 import { imagetools } from 'vite-imagetools';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
-import { externalizeDeps } from 'vite-plugin-externalize-deps';
 import { TanStackRouterVite } from '@tanstack/router-vite-plugin';
 
 export default defineConfig(({ command }) => ({
@@ -17,7 +16,6 @@ export default defineConfig(({ command }) => ({
     minify: true,
     sourcemap: command === 'build',
     rollupOptions: {
-      external: (source) => source.includes('nestjs') || source.includes('nest-js'),
       output: {
         manualChunks: (id) => {
           if (id.includes('@vkontakte')) {
@@ -100,7 +98,6 @@ export default defineConfig(({ command }) => ({
         },
       ],
     }),
-    externalizeDeps(),
     command === 'build' &&
       sentryVitePlugin({
         org: 'sknnr',
