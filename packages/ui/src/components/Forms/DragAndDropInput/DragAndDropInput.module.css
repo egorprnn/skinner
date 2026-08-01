@@ -1,0 +1,61 @@
+.root.root {
+  display: block;
+  border-radius: var(--vkui--size_border_radius_paper--regular);
+}
+
+.rootStretched {
+  width: 100%;
+  height: 100%;
+}
+
+.rootOverlay {
+  top: 0;
+  left: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  /* stylelint-disable-next-line plugin/no-overlay-styles */
+  position: absolute;
+  pointer-events: none;
+  transition: opacity var(--vkui--animation_duration_m);
+}
+
+.rootOverlay.rootVisible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.in {
+  border-radius: inherit;
+  outline: 1px dashed var(--vkui--color_separator_primary3x);
+  transition: outline-color var(--vkui--animation_duration_m);
+}
+
+:global(.vkuiInternalFormItem--status-error) .in {
+  outline-color: var(--vkui--color_stroke_negative);
+}
+
+:global(.vkuiInternalFormItem--status-error) .in * {
+  color: var(--vkui--color_text_negative);
+}
+
+.rootOverlay .in,
+.rootStretched .in {
+  width: 100%;
+  height: 100%;
+}
+
+.rootHovered .in {
+  outline-width: 2px;
+  outline-color: var(--vkui--color_stroke_accent_themed);
+}
+
+.input {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  z-index: 0;
+  position: absolute;
+}

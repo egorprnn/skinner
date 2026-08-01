@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "name": "@skinner/api-schema",
+  "version": "1.0.0",
+  "main": "./src/index.ts",
+  "scripts": {
+    "build": "openapi-typescript ../backend/dist/schema.json -o ./src/schema.ts"
+  },
+  "devDependencies": {
+    "openapi-typescript": "^7.4.3"
+  }
+}

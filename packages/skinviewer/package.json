@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "name": "@skinner/skinviewer",
+  "version": "1.0.0",
+  "main": "./src/index.ts",
+  "scripts": {
+    "start:storybook": "storybook dev -p 6006"
+  },
+  "dependencies": {
+    "@react-hook/merged-ref": "^1.3.2",
+    "skinview3d": "^3.0.1",
+    "threads-es": "^1.0.0"
+  }
+}

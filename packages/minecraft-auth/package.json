@@ -1,0 +1,7 @@
+{
+  "private": true,
+  "name": "@skinner/minecraft-auth",
+  "version": "1.0.0",
+  "description": "Minecraft auth module",
+  "main": "./src/index.ts"
+}

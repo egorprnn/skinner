@@ -1,0 +1,7 @@
+{
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" },
+    { "source": "/i18next/(.*)", "destination": "/i18next/*" }
+  ],
+  "trailingSlash": false
+}

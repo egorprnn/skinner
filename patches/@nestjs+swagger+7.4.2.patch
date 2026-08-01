@@ -1,0 +1,119 @@
+diff --git a/node_modules/@nestjs/swagger/dist/swagger-module.js b/node_modules/@nestjs/swagger/dist/swagger-module.js
+index 14f1103..74a13d1 100644
+--- a/node_modules/@nestjs/swagger/dist/swagger-module.js
++++ b/node_modules/@nestjs/swagger/dist/swagger-module.js
+@@ -20,6 +20,7 @@ const normalize_rel_path_1 = require("./utils/normalize-rel-path");
+ const resolve_path_util_1 = require("./utils/resolve-path.util");
+ const validate_global_prefix_util_1 = require("./utils/validate-global-prefix.util");
+ const validate_path_util_1 = require("./utils/validate-path.util");
++const { HttpStatus } = require('@nestjs/common');
+ class SwaggerModule {
+     static createDocument(app, config, options = {}) {
+         const swaggerScanner = new swagger_scanner_1.SwaggerScanner();
+@@ -72,7 +73,7 @@ class SwaggerModule {
+         let swaggerUiHtml;
+         let swaggerUiInitJS;
+         httpAdapter.get((0, normalize_rel_path_1.normalizeRelPath)(`${finalPath}/swagger-ui-init.js`), (req, res) => {
+-            res.type('application/javascript');
++          httpAdapter.appendHeader(res, 'Content-Type', 'application/javascript; charset=utf-8');
+             const document = getBuiltDocument();
+             if (swaggerOptions.patchDocumentOnRequest) {
+                 const documentToSerialize = swaggerOptions.patchDocumentOnRequest(req, res, document);
+@@ -82,11 +83,15 @@ class SwaggerModule {
+             if (!swaggerUiInitJS) {
+                 swaggerUiInitJS = (0, swagger_ui_1.buildSwaggerInitJS)(document, swaggerOptions);
+             }
+-            res.send(swaggerUiInitJS);
++          httpAdapter.reply(
++            res,
++            swaggerUiInitJS,
++            HttpStatus.OK
++          );
+         });
+         try {
+             httpAdapter.get((0, normalize_rel_path_1.normalizeRelPath)(`${finalPath}/${urlLastSubdirectory}/swagger-ui-init.js`), (req, res) => {
+-                res.type('application/javascript');
++              httpAdapter.appendHeader(res, 'Content-Type', 'application/javascript; charset=utf-8');
+                 const document = getBuiltDocument();
+                 if (swaggerOptions.patchDocumentOnRequest) {
+                     const documentToSerialize = swaggerOptions.patchDocumentOnRequest(req, res, document);
+@@ -96,25 +101,37 @@ class SwaggerModule {
+                 if (!swaggerUiInitJS) {
+                     swaggerUiInitJS = (0, swagger_ui_1.buildSwaggerInitJS)(document, swaggerOptions);
+                 }
+-                res.send(swaggerUiInitJS);
++              httpAdapter.reply(
++                res,
++                swaggerUiInitJS,
++                HttpStatus.OK
++              );
+             });
+         }
+         catch (err) {
+         }
+         httpAdapter.get(finalPath, (_, res) => {
+-            res.type('text/html');
++          httpAdapter.appendHeader(res, 'Content-Type', 'text/html; charset=utf-8');
+             if (!swaggerUiHtml) {
+                 swaggerUiHtml = (0, swagger_ui_1.buildSwaggerHTML)(baseUrlForSwaggerUI, swaggerOptions);
+             }
+-            res.send(swaggerUiHtml);
++          httpAdapter.reply(
++            res,
++            swaggerUiHtml,
++            HttpStatus.OK
++          );
+         });
+         try {
+             httpAdapter.get((0, normalize_rel_path_1.normalizeRelPath)(`${finalPath}/`), (_, res) => {
+-                res.type('text/html');
++              httpAdapter.appendHeader(res, 'Content-Type', 'text/html; charset=utf-8');
+                 if (!swaggerUiHtml) {
+                     swaggerUiHtml = (0, swagger_ui_1.buildSwaggerHTML)(baseUrlForSwaggerUI, swaggerOptions);
+                 }
+-                res.send(swaggerUiHtml);
++              httpAdapter.reply(
++                res,
++                swaggerUiHtml,
++                HttpStatus.OK
++              );
+             });
+         }
+         catch (err) {
+@@ -122,15 +139,20 @@ class SwaggerModule {
+     }
+     static serveDefinitions(httpAdapter, getBuiltDocument, options) {
+         httpAdapter.get((0, normalize_rel_path_1.normalizeRelPath)(options.jsonDocumentUrl), (req, res) => {
+-            res.type('application/json');
++          httpAdapter.appendHeader(res, 'Content-Type', 'application/json; charset=utf-8');
+             const document = getBuiltDocument();
+             const documentToSerialize = options.swaggerOptions.patchDocumentOnRequest
+                 ? options.swaggerOptions.patchDocumentOnRequest(req, res, document)
+                 : document;
+-            res.send(JSON.stringify(documentToSerialize));
++          httpAdapter.reply(
++            res,
++            documentToSerialize,
++            HttpStatus.OK
++          );
+         });
+         httpAdapter.get((0, normalize_rel_path_1.normalizeRelPath)(options.yamlDocumentUrl), (req, res) => {
+-            res.type('text/yaml');
++            httpAdapter.appendHeader(res, 'Content-Type', 'application/x-yaml; charset=utf-8');
++            console.log(res.res)
+             const document = getBuiltDocument();
+             const documentToSerialize = options.swaggerOptions.patchDocumentOnRequest
+                 ? options.swaggerOptions.patchDocumentOnRequest(req, res, document)
+@@ -139,7 +161,11 @@ class SwaggerModule {
+                 skipInvalid: true,
+                 noRefs: true
+             });
+-            res.send(yamlDocument);
++          httpAdapter.reply(
++            res,
++            yamlDocument,
++            HttpStatus.OK
++          );
+         });
+     }
+     static setup(path, app, documentOrFactory, options) {

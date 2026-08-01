@@ -1,0 +1,11 @@
+@import '@vkontakte/vkui-tokens/themes/vkBaseDark/cssVars/declarations/onlyVariablesLocal.css';
+
+.vkui--vkBase--dark {
+  --vkui--color_background: #151515;
+  --vkui--color_background_content: #1b1b1b;
+  --vkui--color_field_border_alpha: transparent;
+}
+
+.vkuiInternalGroup::before {
+  content: unset;
+}

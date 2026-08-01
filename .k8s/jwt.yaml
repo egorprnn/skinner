@@ -1,0 +1,15 @@
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  annotations:
+    sealedsecrets.bitnami.com/cluster-wide: 'true'
+  name: jwt
+spec:
+  encryptedData:
+    JWT_SECRET: AgBM2JenHHE+1DvaDjwCgbLDtj4hA93ryyg1Yteluru2k++ZrWd6JdkHcVb0XOHs8SJspnwJX6l0ZoJNK1Uokoio3s8Dz4d6equhbxotxlwqT6RAsUiAb1mAdusS9C5MRq6EUG6M3OwjuNB81OsBpdWs8wInlicxnvfW+RD6c12p6QCPCp6klS+ff+qnGOn43+t1HPk64hnQAXGJVeNK/CYbX87vkxeYjmcbCTAGpeRcKO3wRmOjzMJC9QEfqw6gJizZoiBfWpznvGKC2WGF93REYLKiaVUNphzTHE4/HqqEnNiRdMOil+r7vgFv4YZIvFAHyetbIxsEm6kt0LQfVUfsFaBTiaTae91LdNsN4nEEvT4wghlQRxeh2wnjW+dlGBjWH6IY8RyNDiq79jss/GVN1F5dONjvrMDG6VJgqQZx8z5mxgUSRzep7UtP3PUmby4ZbQESW9mGzRDZzpHHhHstGD2jIP2WXOrjEw9TQrJg709qOPZlLDNjoIbH9FLAeNaH3Z9opXxvWsKTvPYb7LfzajXYZJct9SBu+5YJ3jl8VHsCrI1BdSa+TGEkDgVA0JAqAbDzlWgRKfvFx5d8BXfGFjlBjugAOWYwruFziADgLRGwS7MKwtBbrA16BrDvfsA/PPglotIlWF5ZDl1hIPyuFpbS9VAv9s0M68JjTYwgDL/7a9IQ4F9rYfcVzMZDgZY+EFpMHgijEZv5EwbtExTczi2VVzvRi0LyNTmKr87xYxyWp4flPWfy
+  template:
+    metadata:
+      annotations:
+        sealedsecrets.bitnami.com/cluster-wide: 'true'
+      name: jwt
+    type: Opaque

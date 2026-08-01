@@ -1,0 +1,14 @@
+.root {
+  display: grid;
+  position: relative;
+  place-items: center;
+  pointer-events: none;
+  grid-template-areas: 'categories';
+  width: calc(var(--vkui_internal--categories-size) * var(--vkui_internal--categories-level));
+  height: calc(var(--vkui_internal--categories-size) * var(--vkui_internal--categories-level));
+}
+
+.root .root {
+  left: calc(-16% * var(--vkui_internal--categories-level));
+  position: absolute;
+}

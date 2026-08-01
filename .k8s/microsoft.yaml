@@ -1,0 +1,16 @@
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  annotations:
+    sealedsecrets.bitnami.com/cluster-wide: 'true'
+  name: microsoft
+spec:
+  encryptedData:
+    MICROSOFT_CLIENT_ID: AgBSeY4EyIatNZVoptcu6uW3X0aznTUDVW2eTLhWyo93N2b912sE++bIvxeyRScz/CZOLdsGJ3VwyWTulMvZ74BHR1QsXmaj/XGBoqBIOJADIUVlnCCkjoaqL0SL9zz7PR1w8gpNygLYwl55DaW8QktBsRl/rZsIA5z0SngnzerSeagTBgG15+gycK2i6qqyMKNAnIn93J4tDYonxizf8gTeJVz7+TEpLUwWg+lOsVTEwn/XAKMDRx7SrwOC/SOf0glnbubw6iqssm08+2/FrjXPrsGUoPuKawg/Sk7J5w/5WsLsNuj9FxiSaJwMkl8jXtdgiA68qcIxEgBe2kO+FMKvbSe3xDjJrbS0qpm6nMEjcT2G8qHatTYrwMe+gdXfPpoBDpwcHFGt5dVt2y3oTgoirG/6+Puw/pXzNJJ/J3csKbIZUYQg7JCwG6yKspG6pcZN7dgDkQnOb1d1UqFsWIvG7Sv9++1zY2rxUytTbjC+y/E2MrJzrW1UHj3C6iCAzzQPNDAN8IE2vuJIXZCFzqR3+JAH0GAwKi2ONh41zbkRgHB4MJwQ/hk1o9lE1mAa9xcxhpyQPWnSSsmT8LtNqwNo5mu7aJLFyAooY36CB29gmTDEfdQe0VvALt18ud1MalnWEjK7rBCVWD27ChOB7GG5ws6mvMTwq9FmFw5AFeP/c2jNLBkb8vuoNW7hqiHEE3x875pReUnKEo8dwHf/lEf5h1AapGAkMOd9geB4rE45U2K/5dM=
+    MICROSOFT_CLIENT_SECRET: AgAmHr/6GT0TRLkydD5OpfHl1BhS5/+nMNuUlPyKUeGfbecW7IO/a3GLmD5GatTB7MQhmgUYOhj/QLGlcr/JWBKoJJFgup3kDT7NGzxLQ+GAIhNf3sDVVRcV5Ba/CLLcmm/NPlCrXk75dGCyn/IpxzlR2AllSw2vukG1+aN+gKKjdxE6jgeXRfWgzexJ2/549k0H86QKx3wdCETAa50AM5JSGz8zlDIFrUl7niNfT/wM8jhgmfLwKE8bc/vfBavofX8j9M3wgLMwNtQVoPZT4yeMEHI8icKOiKU1oB5z6E1GmJgVyI1DtBOK1QJZ93/pFr798kVtc39sSXBt9avh2gBPMy0NAwvRGI+g98fCdi0/dWj6FLTtCPUBk1fbwXJ3aQ4Q9cvxlh2AyGfFb0kmbAgc7/AtwYDjFGfWbuu4FewZ+8c2Ely0cwoIvwI1PE4KfxJbatmnJYchE1LbbJu+aZ9PiJQPwnqp8n4YJkZe+Z4S2Uj6o+/yVN9CwH8NcrQRWLsNdoiyiijNiiZS7s1AQMAaPvnn1kD2n8e9CgmXnzL7S+6/WRSO0jLFDQRWnNgIN0UmWNaGJIXsgxX8KTvYrpIxDSxqQ4aDZYNZOeYjPdUZDl0+mXAXmrprikB7/gwYkAILbvZ/4eO/XzZ8rsJfH1wcSqiPYSiLl1hxNWiVhVVvjDPjTkOf4J7zP8kx0UW/r2jjct024gz0mAMzwBY4upguVhaUnV9NS4dZ77ff89zP7qZBmKD4uuqS
+  template:
+    metadata:
+      annotations:
+        sealedsecrets.bitnami.com/cluster-wide: 'true'
+      name: microsoft
+    type: Opaque

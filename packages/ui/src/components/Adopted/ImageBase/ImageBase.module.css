@@ -1,0 +1,4 @@
+/* stylelint-disable-next-line selector-max-type */
+.rootHasObjectFit > img {
+  object-fit: var(--image-base-object-fit, 'cover');
+}

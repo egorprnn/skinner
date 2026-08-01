@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "name": "@skinner/ui",
+  "version": "1.0.0",
+  "scripts": {
+    "start:storybook": "storybook dev -p 6006"
+  },
+  "main": "src/index.ts"
+}

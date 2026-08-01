@@ -1,0 +1,68 @@
+import i18next from 'i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+import i18nextResourcesToBackend from 'i18next-resources-to-backend';
+import { setErrorMap, z } from 'zod';
+import { IS_DEVELOPMENT_MODE } from '@skinner/constants';
+
+export const i18nextInitialization = i18next
+  .use(LanguageDetector)
+  .use(
+    // @ts-expect-error
+    i18nextResourcesToBackend(async (language, namespace) => {
+      if (typeof window !== 'undefined') {
+        if (namespace.startsWith('shared.')) {
+          return import(/* @vite-ignore */ `../../i18next/locales/${language}/${namespace}.js`);
+        }
+
+        return import(/* @vite-ignore */ `../../i18next/locales/${language}/frontend/${namespace}.js`);
+      }
+
+      if (namespace.startsWith('shared.')) {
+        return import(/* @vite-ignore */ `../locales/${language}/${namespace}.js`).then((module) => module.default);
+      }
+
+      return import(/* @vite-ignore */ `../locales/${language}/backend/${namespace}.js`).then(
+        (module) => module.default,
+      );
+    }),
+  )
+  .init({
+    ns: ['common'],
+    defaultNS: 'common',
+    fallbackLng: 'en',
+    supportedLngs: ['en', 'ru'],
+    debug: IS_DEVELOPMENT_MODE,
+    interpolation: {
+      escapeValue: false,
+    },
+  });
+
+if (typeof window !== 'undefined') {
+  i18next.on('languageChanged', (lang) => {
+    document.documentElement.lang = lang;
+  });
+}
+
+setErrorMap((issue, context) => {
+  let message: string;
+
+  switch (issue.code) {
+    case z.ZodIssueCode.invalid_type:
+      message = i18next.t('shared.zod:issue_invalid_type');
+      break;
+    case z.ZodIssueCode.too_small:
+      message = i18next.t('shared.zod:issue_too_small', {
+        count: issue.minimum as number,
+      });
+      break;
+    default:
+      message = context.defaultError;
+      break;
+  }
+
+  return {
+    message,
+  };
+});
+
+export { i18next };

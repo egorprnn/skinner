@@ -1,0 +1,30 @@
+.root :global(.vkuiInternalPanel__in) {
+  height: 100vh;
+  max-height: 100vh;
+}
+
+.group {
+  height: calc(100% - var(--vkui_internal--panel_header_height) * 2);
+}
+
+.in {
+  height: 100%;
+  gap: var(--vkui--spacing_size_xl);
+}
+
+.skin {
+  overflow: hidden;
+  min-width: calc(100% / 2.5);
+}
+
+.skin canvas {
+  border-radius: var(--vkui--size_border_radius--regular);
+}
+
+.sections {
+  overflow: hidden;
+}
+
+.sectionsIn {
+  height: 100%;
+}

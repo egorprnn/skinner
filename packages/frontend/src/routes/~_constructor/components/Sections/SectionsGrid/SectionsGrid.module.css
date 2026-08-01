@@ -1,0 +1,15 @@
+.root {
+  border-radius: var(--vkui--size_border_radius--regular);
+}
+
+.in {
+  width: 100%;
+  position: relative;
+}
+
+.virtualRows {
+  top: 0;
+  left: 0;
+  width: 100%;
+  position: absolute;
+}

@@ -1,0 +1,7 @@
+.root.root {
+  background: repeating-conic-gradient(var(--vkui--color_background) 0% 25%, transparent 0% 50%) 50% / 30px 30px;
+}
+
+.root img {
+  filter: drop-shadow(0px 0px var(--vkui--spacing_size_xs) var(--vkui--color_image_border_alpha));
+}

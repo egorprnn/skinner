@@ -1,0 +1,9 @@
+.root {
+  bottom: 0;
+  width: 100%;
+  position: sticky;
+  margin-top: auto;
+  box-sizing: border-box;
+  background: var(--vkui--color_background_modal);
+  border-top: var(--vkui--size_border--regular) solid var(--vkui--color_separator_primary);
+}

@@ -1,0 +1,311 @@
+---
+stages:
+  - ".pre"
+  - prepare
+  - build
+  - test
+  - review
+  - stagging
+  - deploy
+  - ".post"
+variables:
+  ENVS_ENABLED: "y"
+  K8S_CTX: nnstd/k8s:production
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      variables:
+        ENV_NAME: review/$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME/$CI_MERGE_REQUEST_IID
+        EPHEMERAL: 'yes'
+    - if: "$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS"
+      when: never
+    - if: "$CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH"
+      variables:
+        ENV_NAME: production
+        EPHEMERAL: 'no'
+".version": |
+  if [ -z ${IMAGE_TAG+x} ]; then
+    if [ -n "$CI_COMMIT_TAG" ]; then
+      NOSLASH=$(echo "$CI_COMMIT_TAG" | tr -s / - )
+      SANITIZED="${NOSLASH//[^a-zA-Z0-9\-\.]/}"
+      VERSION="$SANITIZED"
+    elif [ "$CI_COMMIT_REF_NAME" = $CI_DEFAULT_BRANCH ]; then
+      VERSION="$CI_COMMIT_SHA"
+    else \
+      NOSLASH=$(echo "$CI_COMMIT_REF_NAME" | tr -s / - )
+      SANITIZED="${NOSLASH//[^a-zA-Z0-9\-]/}"
+      VERSION="branch-$SANITIZED-$CI_COMMIT_SHA"
+    fi
+    export IMAGE_TAG=$CI_REGISTRY_IMAGE:$VERSION
+  fi
+kaniko-build:
+  variables:
+    KANIKO_ARGS: "--force --cache --reproducible --compressed-caching=false"
+    KANIKO_BUILD_CONTEXT: "$CI_PROJECT_DIR"
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint:
+      - ''
+  script:
+    - |
+      if [ -z ${IMAGE_TAG+x} ]; then
+        if [ -n "$CI_COMMIT_TAG" ]; then
+          NOSLASH=$(echo "$CI_COMMIT_TAG" | tr -s / - )
+          SANITIZED="${NOSLASH//[^a-zA-Z0-9\-\.]/}"
+          VERSION="$SANITIZED"
+        elif [ "$CI_COMMIT_REF_NAME" = $CI_DEFAULT_BRANCH ]; then
+          VERSION="$CI_COMMIT_SHA"
+        else \
+          NOSLASH=$(echo "$CI_COMMIT_REF_NAME" | tr -s / - )
+          SANITIZED="${NOSLASH//[^a-zA-Z0-9\-]/}"
+          VERSION="branch-$SANITIZED-$CI_COMMIT_SHA"
+        fi
+        export IMAGE_TAG=$CI_REGISTRY_IMAGE:$VERSION
+      fi
+    - echo $IMAGE_TAG
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(echo -n ${CI_REGISTRY_USER}:${CI_REGISTRY_PASSWORD}
+      | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+    - DOCKERFILE_PATH=${DOCKERFILE_PATH:-"$KANIKO_BUILD_CONTEXT/Dockerfile"}
+    - "/kaniko/executor --context $KANIKO_BUILD_CONTEXT --dockerfile $DOCKERFILE_PATH
+    --destination $IMAGE_TAG $KANIKO_ARGS"
+    - echo "IMAGE_TAG=$IMAGE_TAG" >> build.env
+  artifacts:
+    reports:
+      dotenv:
+        - build.env
+  rules:
+    - exists:
+        - Dockerfile
+    - if: "$DOCKERFILE_PATH"
+    - if: "$KANIKO_BUILD_CONTEXT != $CI_PROJECT_DIR"
+".k8s-namespace":
+  script:
+    - export K8S_NAMESPACE_TARGET="${CI_ENVIRONMENT_NAME:=$CI_COMMIT_REF_NAME}"
+    - export K8S_NAMESPACE_NOSLASH=$(echo "$CI_PROJECT_PATH-$K8S_NAMESPACE_TARGET" |
+      tr -s / - | sed 's:-*$::')
+    - export K8S_NAMESPACE_CLEAN="${K8S_NAMESPACE_NOSLASH//[^a-zA-Z0-9\-]/}"
+    - export K8S_NAMESPACE="${K8S_NAMESPACE:=$K8S_NAMESPACE_CLEAN}"
+  ensure:
+    - kubectl create ns $K8S_NAMESPACE -o yaml --dry-run=client | kubectl apply -f -
+".k8s-context":
+  script:
+    - kubectl config get-contexts
+    - kubectl config use-context ${K8S_CTX:=cloud/k8s:dev}
+".k8s-pull-secret":
+  script:
+    - |
+      kubectl create secret docker-registry --dry-run=client gitlab-registry \
+        -n $K8S_NAMESPACE \
+        --docker-server=$CI_REGISTRY \
+        --docker-username=$CI_DEPLOY_USER \
+        --docker-password=$CI_DEPLOY_PASSWORD \
+        --docker-email=docker@ci.test -o yaml | kubectl apply -f -
+argocd:
+  variables:
+    GIT_SUBMODULE_STRATEGY: normal
+  stage: deploy
+  image:
+    name: bitnami/kubectl:1.31.3
+    entrypoint:
+      - ''
+  environment:
+    name: "$ENV_NAME"
+    url: "$ENV_URL"
+    on_stop: argocd stop
+  script:
+    - - kubectl config get-contexts
+      - kubectl config use-context ${K8S_CTX:=cloud/k8s:dev}
+    - - export K8S_NAMESPACE_TARGET="${CI_ENVIRONMENT_NAME:=$CI_COMMIT_REF_NAME}"
+      - export K8S_NAMESPACE_NOSLASH=$(echo "$CI_PROJECT_PATH-$K8S_NAMESPACE_TARGET"
+        | tr -s / - | sed 's:-*$::')
+      - export K8S_NAMESPACE_CLEAN="${K8S_NAMESPACE_NOSLASH//[^a-zA-Z0-9\-]/}"
+      - export K8S_NAMESPACE="${K8S_NAMESPACE:=$K8S_NAMESPACE_CLEAN}"
+    - - kubectl create ns $K8S_NAMESPACE -o yaml --dry-run=client | kubectl apply -f
+        -
+    - - |
+        kubectl create secret docker-registry --dry-run=client gitlab-registry \
+          -n $K8S_NAMESPACE \
+          --docker-server=$CI_REGISTRY \
+          --docker-username=$CI_DEPLOY_USER \
+          --docker-password=$CI_DEPLOY_PASSWORD \
+          --docker-email=docker@ci.test -o yaml | kubectl apply -f -
+    - export REVISION=${CI_COMMIT_TAG:=$CI_COMMIT_SHA}
+    - echo $REVISION
+    - |
+      cat << EOF > argo.yaml
+      apiVersion: argoproj.io/v1alpha1
+      kind: Application
+      metadata:
+          name: $K8S_NAMESPACE
+          namespace: argocd
+          annotations:
+            link.argocd.argoproj.io/external-link: "$CI_ENVIRONMENT_URL"
+            pipeline.gitlab.com/url: "$CI_PIPELINE_URL"
+            project.gitlab.com/url: "$CI_PROJECT_URL"
+            project.gitlab.com/id: "$CI_PROJECT_ID"
+            project.gitlab.com/name: "$CI_PROJECT_NAME"
+            project.gitlab.com/namespace: "$CI_PROJECT_NAMESPACE"
+            project.gitlab.com/path: "$CI_PROJECT_PATH"
+            repo.gitlab.com/url: "$CI_REPOSITORY_URL"
+            env.gitlab.com/url: "$CI_ENVIRONMENT_URL"
+            repo.gitlab.com/tag: "$CI_COMMIT_TAG"
+            commit.gitlab.com/author: "$CI_COMMIT_AUTHOR"
+            commit.gitlab.com/branch: "$CI_COMMIT_BRANCH"
+            commit.gitlab.com/title: >
+                $CI_COMMIT_TITLE
+            commit.gitlab.com/sha: "$CI_COMMIT_SHA"
+            commit.gitlab.com/tag: "$CI_COMMIT_TAG"
+            commit.gitlab.com/timestamp: "$CI_COMMIT_TIMESTAMP"
+            env.gitlab.com/slug: "$CI_ENVIRONMENT_SLUG"
+            env.gitlab.com/tier: "$CI_ENVIRONMENT_TIER"
+            mr.gitlab.com/tier: "$CI_MERGE_REQUEST_ID"
+      spec:
+        destination:
+          namespace: $K8S_NAMESPACE
+          server: https://kubernetes.default.svc
+        project: default
+        source:
+          path: .k8s
+          repoURL: $CI_PROJECT_URL.git
+          targetRevision: $REVISION
+          directory:
+            exclude: '*.json'
+            jsonnet:
+              libs:
+              - vendor
+              - .k8s/vendor
+              extVars:
+                - name: ns
+                  value: $K8S_NAMESPACE
+                - name: vcluster
+                  value: '$K8S_VCLUSTER'
+                - name: tag
+                  value: "$CI_COMMIT_TAG"
+                - name: namespace
+                  value: $K8S_NAMESPACE
+                - name: name
+                  value: $K8S_NAMESPACE
+                - name: pipeline_url
+                  value: '$CI_PIPELINE_URL'
+                - name: project_url
+                  value: '$CI_PROJECT_URL'
+                - name: project_name
+                  value: '$CI_PROJECT_NAME'
+                - name: project_id
+                  value: '$CI_PROJECT_ID'
+                - name: proj_id
+                  value: '$CI_PROJECT_ID'
+                - name: pro_id
+                  value: '$CI_PROJECT_ID'
+                - name: project_namespace
+                  value: $CI_PROJECT_NAMESPACE
+                - name: project_path
+                  value: $CI_PROJECT_PATH
+                - name: env_url
+                  value: '$CI_ENVIRONMENT_URL'
+                - name: commit_author
+                  value: '$CI_COMMIT_AUTHOR'
+                - name: commit_branch
+                  value: '$CI_COMMIT_BRANCH'
+                - name: commit_title
+                  value: >
+                      $CI_COMMIT_TITLE
+                - name: commit_sha
+                  value: '$CI_COMMIT_SHA'
+                - name: commit_tag
+                  value: '$CI_COMMIT_TAG'
+                - name: commit_timestamp
+                  value: '$CI_COMMIT_TIMESTAMP'
+                - name: env_slug
+                  value: '$CI_ENVIRONMENT_SLUG'
+                - name: env_tier
+                  value: '$CI_ENVIRONMENT_TIER'
+                - name: image
+                  value: '$IMAGE_TAG'
+                - name: mr_id
+                  value: '$CI_MERGE_REQUEST_ID'
+        syncPolicy:
+          automated: {}
+        info:
+        - name: pipeline url
+          value: '$CI_PIPELINE_URL'
+        - name: project url
+          value: '$CI_PROJECT_URL'
+        - name: project_name
+          value: $CI_PROJECT_NAME
+        - name: project_namespace
+          value: $CI_PROJECT_NAMESPACE
+        - name: project_path
+          value: $CI_PROJECT_PATH
+        - name: env url
+          value: '$CI_ENVIRONMENT_URL'
+        - name: commit author
+          value: '$CI_COMMIT_AUTHOR'
+        - name: commit branch
+          value: '$CI_COMMIT_BRANCH'
+        - name: commit tag
+          value: '$CI_COMMIT_TAG'
+        - name: commit title
+          value: >
+              $CI_COMMIT_TITLE
+        - name: commit sha
+          value: '$CI_COMMIT_SHA'
+        - name: commit tag
+          value: '$CI_COMMIT_TAG'
+        - name: commit timestamp
+          value: '$CI_COMMIT_TIMESTAMP'
+        - name: env slug
+          value: '$CI_ENVIRONMENT_SLUG'
+        - name: env tier
+          value: '$CI_ENVIRONMENT_TIER'
+        - name: vcluster
+          value: '$K8S_VCLUSTER'
+        - name: project_id
+          value: '$CI_PROJECT_ID'
+        - name: mr_id
+          value: '$CI_MERGE_REQUEST_ID'
+      EOF
+    - cat argo.yaml
+    - kubectl apply -f argo.yaml
+  rules:
+    - when: on_success
+argocd stop:
+  variables:
+    GIT_SUBMODULE_STRATEGY: normal
+  stage: deploy
+  image:
+    name: bitnami/kubectl:1.31.1
+    entrypoint:
+      - ''
+  environment:
+    name: "$ENV_NAME"
+    url: "$ENV_URL"
+    action: stop
+  script:
+    - - kubectl config get-contexts
+      - kubectl config use-context ${K8S_CTX:=cloud/k8s:dev}
+    - - export K8S_NAMESPACE_TARGET="${CI_ENVIRONMENT_NAME:=$CI_COMMIT_REF_NAME}"
+      - export K8S_NAMESPACE_NOSLASH=$(echo "$CI_PROJECT_PATH-$K8S_NAMESPACE_TARGET"
+        | tr -s / - | sed 's:-*$::')
+      - export K8S_NAMESPACE_CLEAN="${K8S_NAMESPACE_NOSLASH//[^a-zA-Z0-9\-]/}"
+      - export K8S_NAMESPACE="${K8S_NAMESPACE:=$K8S_NAMESPACE_CLEAN}"
+    - |
+      cat << EOF > argo.yaml
+      apiVersion: argoproj.io/v1alpha1
+      kind: Application
+      metadata:
+          name: $K8S_NAMESPACE
+          namespace: argocd
+      EOF
+    - |
+      if [[ "$EPHEMERAL" == "yes" ]]; then
+        kubectl delete -f argo.yaml
+        kubectl delete ns $K8S_NAMESPACE
+      else
+        echo "Dont delete argocd apps and namespace cause not ephemeral"
+      fi
+  rules:
+    - when: manual
+      if: "$ENV_NAME"

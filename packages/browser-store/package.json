@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "name": "@skinner/browser-store",
+  "version": "1.0.0",
+  "description": "Хранилище использующее API браузера",
+  "main": "./src/index.tsx",
+  "dependencies": {
+    "idb-keyval": "^6.2.1"
+  },
+  "files": [
+    "dist",
+    "src"
+  ]
+}

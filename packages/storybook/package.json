@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "name": "@skinner/storybook",
+  "version": "1.0.0",
+  "description": "Конфигурация и утилиты для Storybook",
+  "devDependencies": {
+    "autoprefixer": "^10.4.19",
+    "postcss-loader": "^8.1.1"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "private": true,
+  "name": "@skinner/frontend",
+  "type": "module",
+  "main": "./app/root.tsx",
+  "scripts": {
+    "dev": "vite --host --port 3000",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@azure/msal-browser": "^3.17.0",
+    "@maskito/core": "^3.0.1",
+    "@maskito/kit": "^3.0.1",
+    "@maskito/react": "^3.0.1",
+    "@react-hook/size": "^2.1.2",
+    "@sentry/react": "^8.28.0",
+    "@sentry/vite-plugin": "^2.22.4",
+    "@tanstack/react-form": "^0.26.4",
+    "@tanstack/react-router": "^1.92.3",
+    "@tanstack/react-virtual": "^3.11.2",
+    "@tanstack/router-vite-plugin": "^1.91.1",
+    "@tanstack/zod-form-adapter": "^0.26.4",
+    "@vercel/speed-insights": "^1.1.0",
+    "framer-motion": "^11.2.10",
+    "million": "^3.1.11",
+    "mobx": "^6.12.4",
+    "mobx-react-lite": "^4.0.7",
+    "object-to-formdata": "^4.5.1",
+    "openapi-fetch": "^0.13.0",
+    "react-i18next": "^14.1.2",
+    "react-use": "^17.5.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react-swc": "^3.7.2",
+    "vite-bundle-visualizer": "^1.2.1",
+    "vite-plugin-environment": "^1.1.3",
+    "vite-plugin-static-copy": "^2.2.0"
+  },
+  "engines": {
+    "node": ">=20.0.0 <21.0.0"
+  },
+  "sideEffects": false
+}

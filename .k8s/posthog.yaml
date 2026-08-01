@@ -1,0 +1,15 @@
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  annotations:
+    sealedsecrets.bitnami.com/cluster-wide: 'true'
+  name: posthog
+spec:
+  encryptedData:
+    POSTHOG_API_KEY: AgCblbxqWixFopjhEfuI+saKzB1iUkvGr2vPGb2Ff5xeuuiD25KTGBBGwo0EKUksci1qlJhm3JFLNrtMvU0bNhHuh08pWxTOqF+kFSK3RovRKGRwJb0ZTozj86x64LnxbKeCVP2V9PjUDSvYqCIdbmvjYbZcNOnVQPyTI0oeR3YpJpJl0ra2SmgI57rs96g4uluAgIiHBWf7WcBO2X6XgPKAURDFz35kksJjF0SSf/zRclTwX0VIwNO7In1tICVullEOws9ySLLBf8KAT0672iEoh9LfYrrj4LnqqHwScM9laQAUwivOOkYeP6ijL3z6mFEs7w6b3jLHBzaEsm8cODKFV9ZJ6gKHRGtrOjLPuOhbw2LuQQitjB+qfp5ico1Wm3ar1L0GjvxFWx9c9hbkzNF66Ml/toU8Dmr0SgwieskVDxL7U3b2/hx6PrFHqsdP36aDBWPC69sTFqT5W6p7AjBjZrGSKoWwxtabZFYj2N3ca9zssUBZ37FxgCKJlrsp9VAYjOEA1dLKM58TF547geIq9OxQ/C50UWW6fKDyewPxvuJXpikcw0RuqOa/BxRCNLQAOJRfVX1ndR0ZmZZ64Eldcu1O9zKTPMWMZOBUGRWqyrIGHNX9iLgEAmzTg1pVYXRFOYK2SbHnNpO6GVDjaOKw7G+1kJWrkbyRlELnCq8bcZzS0Uptz6d2xsQtdWfX9nYPyBqJa3oW2mZEsOz8o6B1QCrYrKZ8r0NUJUG14XlK8mGEvUa0dnx+hUww4JApVA==
+  template:
+    metadata:
+      annotations:
+        sealedsecrets.bitnami.com/cluster-wide: 'true'
+      name: posthog
+    type: Opaque

@@ -1,0 +1,16 @@
+diff --git a/node_modules/nestjs-zod/dist/index.js b/node_modules/nestjs-zod/dist/index.js
+index 4c113e9..a99b10b 100644
+--- a/node_modules/nestjs-zod/dist/index.js
++++ b/node_modules/nestjs-zod/dist/index.js
+@@ -54,9 +54,9 @@ const createZodSerializationException = (error) => {
+   return new ZodSerializationException(error);
+ };
+ 
+-function validate(value, schemaOrDto, createValidationException = createZodValidationException) {
++async function validate(value, schemaOrDto, createValidationException = createZodValidationException) {
+   const schema = isZodDto(schemaOrDto) ? schemaOrDto.schema : schemaOrDto;
+-  const result = schema.safeParse(value);
++  const result = await schema.safeParseAsync(value);
+   if (!result.success) {
+     throw createValidationException(result.error);
+   }

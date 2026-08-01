@@ -1,0 +1,111 @@
+import path from 'path';
+import svgr from 'vite-plugin-svgr';
+import million from 'million/compiler';
+import env from 'vite-plugin-environment';
+import react from '@vitejs/plugin-react-swc';
+import typescript from '@rollup/plugin-typescript';
+import { defineConfig } from 'vite';
+import { imagetools } from 'vite-imagetools';
+import { sentryVitePlugin } from '@sentry/vite-plugin';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
+import { TanStackRouterVite } from '@tanstack/router-vite-plugin';
+
+export default defineConfig(({ command }) => ({
+  base: '/',
+  build: {
+    minify: true,
+    sourcemap: command === 'build',
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          if (id.includes('@vkontakte')) {
+            return;
+          }
+
+          if (id.includes('@sentry')) {
+            return 'sentry';
+          }
+
+          if (id.includes('@swc') || id.includes('@babel') || id.includes('tslib')) {
+            return 'helpers';
+          }
+
+          if (id.includes('three') || id.includes('skinview3d') || id.includes('skinview-utils')) {
+            return '3d';
+          }
+
+          if (id.includes('i18next') || id.includes('i18next-browser-languagedetector')) {
+            return 'i18next';
+          }
+
+          if (id.includes('framer-motion')) {
+            return 'animations';
+          }
+
+          if (id.includes('mobx') || id.includes('mobx-react-lite')) {
+            return 'state-management';
+          }
+
+          if (id.includes('zod') || id.includes('tsyringe') || id.includes('reflect-metadata')) {
+            return 'validation-and-di';
+          }
+        },
+      },
+    },
+  },
+  esbuild: {
+    target: 'chrome84',
+    legalComments: 'none',
+  },
+  optimizeDeps: {
+    force: true,
+  },
+  resolve: {
+    alias: [{ find: /^@vkontakte\/vkui$/, replacement: '@vkontakte/vkui/dist/cssm' }],
+  },
+  server: {
+    host: true,
+    port: 3000,
+    hmr: {
+      host: 'localhost',
+      protocol: 'ws',
+      clientPort: 3000,
+    },
+  },
+  plugins: [
+    svgr(),
+    million.vite({
+      auto: { rsc: true },
+      rsc: true,
+      experimental_options: {
+        noSlot: true,
+      },
+    }),
+    typescript(),
+    react({
+      tsDecorators: command !== 'build',
+    }),
+    env(['NODE_ENV']),
+    TanStackRouterVite({
+      routeFilePrefix: '~',
+    }),
+    imagetools(),
+    viteStaticCopy({
+      targets: [
+        {
+          src: path.resolve(__dirname, '..', 'i18next', 'locales'),
+          dest: './i18next',
+        },
+      ],
+    }),
+    command === 'build' &&
+      sentryVitePlugin({
+        org: 'sknnr',
+        project: 'sknnr-frontend',
+        sourcemaps: {
+          filesToDeleteAfterUpload: 'dist/**/*.map',
+        },
+        authToken: process.env['SENTRY_AUTH_TOKEN'],
+      }),
+  ],
+}));

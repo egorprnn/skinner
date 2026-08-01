@@ -1,0 +1,14 @@
+.root {
+  --vkui_internal--categories-item-rotate: calc(
+    (
+        var(--vkui_internal--categories-segment) *
+          (var(--vkui_internal--categories-index) / (var(--vkui_internal--categories-count) - 1))
+      ) + var(--vkui_internal--categories-rotation) + -90deg
+  );
+
+  pointer-events: all;
+  grid-area: categories;
+  transform: rotate(var(--vkui_internal--categories-item-rotate))
+    translate(calc(var(--vkui_internal--categories-size) / 2))
+    rotate(calc(var(--vkui_internal--categories-item-rotate) * -1));
+}
